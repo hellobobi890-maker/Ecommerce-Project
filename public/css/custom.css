@@ -1,10 +1,19 @@
 :root {
-    --primary-color: #0d6efd;
-    --secondary-color: #6c757d;
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #3b82f6;
+    --secondary-color: #64748b;
+    --accent-color: #f97316;
+    --text-color: #1e293b;
+    --bg-color: #ffffff;
+    --bg-light: #f8fafc;
+    --border-color: #e2e8f0;
+    --success-color: #22c55e;
+    --danger-color: #ef4444;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Outfit', sans-serif;
     background-color: #f8f9fa;
 }
 
@@ -29,7 +38,7 @@ body {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: var(--bg-light);
     padding: 80px 0;
 }
 
@@ -137,7 +146,7 @@ body {
 }
 
 .action-btn:hover {
-    background: #3498db;
+    background: var(--primary-color);
     color: white;
     transform: scale(1.1);
 }
@@ -161,7 +170,7 @@ body {
 
 /* Fix for dark text in dark mode if applicable */
 .product-title a:hover {
-    color: #3498db;
+    color: var(--primary-color);
 }
 
 .price-section {
@@ -439,12 +448,12 @@ body {
 }
 
 .collection-overlay {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+    background: rgba(0, 0, 0, 0.55);
     transition: all 0.3s ease;
 }
 
 .collection-card:hover .collection-overlay {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+    background: rgba(0, 0, 0, 0.65);
 }
 
 .collection-content {
@@ -458,5 +467,24 @@ body {
 
 /* Badge NEW style */
 .badge-new {
-    background: #3498db;
+    background: var(--primary-color);
+}
+
+/* Badge Out of Stock */
+.badge-stock {
+    background: #6c757d;
+}
+
+/* Action button indigo hover */
+.action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Current price with primary color */
+.current-price {
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: bold;
 }

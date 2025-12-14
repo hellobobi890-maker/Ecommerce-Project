@@ -6,32 +6,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderItem extends Model
+class Review extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
+        'user_id',
         'product_id',
-        'product_variant_id',
-        'quantity',
-        'price',
-        'size',
-        'color',
+        'rating',
+        'comment',
+        'is_approved',
     ];
 
-    public function order(): BelongsTo
+    protected $casts = [
+        'is_approved' => 'boolean',
+    ];
+
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(User::class);
     }
 
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    public function variant(): BelongsTo
-    {
-        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 }

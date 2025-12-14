@@ -43,9 +43,17 @@
                                 </td>
                                 <td class="pe-4 text-end">
                                     <a href="{{ route('admin.products.edit', $product) }}"
-                                        class="btn btn-sm btn-light text-primary" title="Edit">
+                                        class="btn btn-sm btn-light text-primary me-1" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline"
+                                        onsubmit="return confirm('Kya aap sure hain? Yeh product permanently delete ho jaye ga.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-light text-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

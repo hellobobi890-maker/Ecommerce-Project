@@ -13,6 +13,7 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="ps-4 py-3 text-uppercase text-muted fs-7 fw-bold">Order Number</th>
+                            <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Products</th>
                             <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Customer</th>
                             <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Date</th>
                             <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Status</th>
@@ -24,6 +25,28 @@
                         @forelse($orders as $order)
                             <tr>
                                 <td class="ps-4 fw-medium text-dark">#{{ $order->order_number }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @php
+                                            $thumbs = $order->items->take(3);
+                                            $extraCount = max(0, $order->items->count() - 3);
+                                        @endphp
+                                        @foreach ($thumbs as $item)
+                                            @php
+                                                $img = null;
+                                                if ($item->product && is_array($item->product->images) && count($item->product->images) > 0) {
+                                                    $img = $item->product->images[0];
+                                                }
+                                                $img = $img ?: 'https://placehold.co/40x40?text=Img';
+                                            @endphp
+                                            <img src="{{ $img }}" class="rounded-2 border me-1" style="width: 40px; height: 40px; object-fit: cover;" alt="Product">
+                                        @endforeach
+
+                                        @if ($extraCount > 0)
+                                            <span class="small text-muted ms-1">+{{ $extraCount }}</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-2 rounded-circle d-flex align-items-center justify-content-center"
@@ -58,7 +81,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">No orders found.</td>
+                                <td colspan="7" class="text-center py-5 text-muted">No orders found.</td>
                             </tr>
                         @endforelse
                     </tbody>

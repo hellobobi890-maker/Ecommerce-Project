@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Hero Slider -->
-    <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div id="heroCarousel" class="carousel slide mb-5">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"
                 aria-label="Slide 1"></button>
@@ -150,19 +150,19 @@
                                 </a>
                                 <div class="action-buttons">
                                     <button class="action-btn" title="Add to Cart"
-                                        onclick="addToCart(event, {{ $product->id }})">
-                                        <i class="fas fa-shopping-cart"></i>
+                                        onclick='addToCart(event, @json($product, JSON_HEX_APOS | JSON_HEX_QUOT))'>
+                                        <i class="bi bi-cart-plus"></i>
                                     </button>
                                     <button class="action-btn" title="Compare">
-                                        <i class="fas fa-exchange-alt"></i>
+                                        <i class="bi bi-arrow-left-right"></i>
                                     </button>
                                     <button class="action-btn" title="Quick View"
-                                        onclick='openQuickView(@json($product))'>
-                                        <i class="fas fa-eye"></i>
+                                        onclick='openQuickView(@json($product, JSON_HEX_APOS | JSON_HEX_QUOT))'>
+                                        <i class="bi bi-eye"></i>
                                     </button>
                                     <button class="action-btn" title="Add to Wishlist"
                                         onclick="addToWishlist(event, {{ $product->id }})">
-                                        <i class="fas fa-heart"></i>
+                                        <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
                             </div>
@@ -177,11 +177,11 @@
                                 <div class="meta-swap-container">
                                     <div class="rating">
                                         <span class="stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
                                         </span>
                                         <span class="review-count">({{ rand(5, 50) }})</span>
                                     </div>
@@ -199,8 +199,77 @@
         </div>
     </div>
 
-    <!-- New Section: Trending -->
+    <!-- Testimonials Section -->
     <div class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small">Customer Reviews</span>
+                <h2 class="fw-bold mt-2">What Our Customers Say</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <div class="text-warning mb-3">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="text-muted mb-4">"Amazing quality products! Delivery was super fast and the customer service was excellent. Will definitely shop again!"</p>
+                        <div class="d-flex align-items-center gap-3 mt-auto">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 600;">SA</div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Sara Ahmed</h6>
+                                <small class="text-muted">Karachi</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <div class="text-warning mb-3">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                        </div>
+                        <p class="text-muted mb-4">"Best online shopping experience in Pakistan! The products are exactly as shown in pictures. Highly recommended!"</p>
+                        <div class="d-flex align-items-center gap-3 mt-auto">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 600;">AK</div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Ali Khan</h6>
+                                <small class="text-muted">Lahore</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <div class="text-warning mb-3">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="text-muted mb-4">"Great prices and even better quality! I love the variety of products available. The new collection is stunning!"</p>
+                        <div class="d-flex align-items-center gap-3 mt-auto">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 600;">FN</div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Fatima Noor</h6>
+                                <small class="text-muted">Islamabad</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Section: Trending -->
+    <div class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5">
                 <span class="text-primary fw-bold text-uppercase small letter-spacing-2">Don't Miss</span>
@@ -222,19 +291,19 @@
                                 </a>
                                 <div class="action-buttons">
                                     <button class="action-btn" title="Add to Cart"
-                                        onclick="addToCart(event, {{ $product->id }})">
-                                        <i class="fas fa-shopping-cart"></i>
+                                        onclick='addToCart(event, @json($product, JSON_HEX_APOS | JSON_HEX_QUOT))'>
+                                        <i class="bi bi-cart-plus"></i>
                                     </button>
                                     <button class="action-btn" title="Compare">
-                                        <i class="fas fa-exchange-alt"></i>
+                                        <i class="bi bi-arrow-left-right"></i>
                                     </button>
                                     <button class="action-btn" title="Quick View"
-                                        onclick='openQuickView(@json($product))'>
-                                        <i class="fas fa-eye"></i>
+                                        onclick='openQuickView(@json($product, JSON_HEX_APOS | JSON_HEX_QUOT))'>
+                                        <i class="bi bi-eye"></i>
                                     </button>
                                     <button class="action-btn" title="Add to Wishlist"
                                         onclick="addToWishlist(event, {{ $product->id }})">
-                                        <i class="fas fa-heart"></i>
+                                        <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
                             </div>
@@ -249,11 +318,11 @@
                                 <div class="meta-swap-container">
                                     <div class="rating">
                                         <span class="stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
                                         </span>
                                         <span class="review-count">({{ rand(5, 50) }})</span>
                                     </div>
@@ -295,19 +364,19 @@
                                 </a>
                                 <div class="action-buttons">
                                     <button class="action-btn" title="Add to Cart"
-                                        onclick="addToCart(event, {{ $product->id }})">
-                                        <i class="fas fa-shopping-cart"></i>
+                                        onclick='addToCart(event, @json($product, JSON_HEX_APOS | JSON_HEX_QUOT))'>
+                                        <i class="bi bi-cart-plus"></i>
                                     </button>
                                     <button class="action-btn" title="Compare">
-                                        <i class="fas fa-exchange-alt"></i>
+                                        <i class="bi bi-arrow-left-right"></i>
                                     </button>
                                     <button class="action-btn" title="Quick View"
                                         onclick='openQuickView(@json($product, JSON_HEX_APOS | JSON_HEX_QUOT))'>
-                                        <i class="fas fa-eye"></i>
+                                        <i class="bi bi-eye"></i>
                                     </button>
                                     <button class="action-btn" title="Add to Wishlist"
                                         onclick="addToWishlist(event, {{ $product->id }})">
-                                        <i class="fas fa-heart"></i>
+                                        <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
                             </div>
@@ -325,11 +394,11 @@
                                 <div class="meta-swap-container">
                                     <div class="rating">
                                         <span class="stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
                                         </span>
                                         <span class="review-count">({{ rand(5, 50) }})</span>
                                     </div>
@@ -352,40 +421,45 @@
 
     <!-- Newsletter Section -->
     <div class="py-5 bg-dark text-white position-relative"
-        style="background-image: url('https://picsum.photos/1920/400?grayscale'); background-size: cover; background-blend-mode: overlay;">
+        style="background: var(--gradient-hero);">
         <div class="container text-center" style="max-width: 600px;">
-            <i class="bi bi-envelope-open display-4 text-primary mb-3"></i>
+            <i class="bi bi-envelope-open display-4 text-white mb-3"></i>
             <h2 class="fw-bold mb-3">Subscribe to our Newsletter</h2>
             <p class="text-white-50 mb-4">Get the latest updates on new products and upcoming sales.</p>
-            <form class="d-flex gap-2 justify-content-center">
-                <input type="email" class="form-control rounded-pill px-4" placeholder="Your Email Address"
+            <form class="d-flex gap-2 justify-content-center" action="{{ route('newsletter.subscribe') }}" method="POST">
+                @csrf
+                <input type="email" name="email" class="form-control rounded-pill px-4" placeholder="Your Email Address"
                     style="max-width: 300px;">
-                <button class="btn btn-primary rounded-pill px-4" type="button">Subscribe</button>
+                <button class="btn btn-light rounded-pill px-4 fw-bold" type="submit">Subscribe</button>
             </form>
         </div>
     </div>
 @endsection
 
-@section('scripts')
+@section('scripts_home')
     <!-- Quick View Modal -->
     <div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content rounded-0">
+            <div class="modal-content rounded-4 overflow-hidden">
                 <div class="modal-body p-0">
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3"
                         data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="row g-0">
                         <div class="col-lg-6">
                             <div class="p-4 h-100 d-flex flex-column">
-                                <div class="main-image-container mb-3 flex-grow-1">
-                                    <img id="qv-main-image" src="" alt="Product">
+                                <div class="main-image-container mb-3 flex-grow-1 bg-light rounded-3 overflow-hidden" style="height: 400px;">
+                                    <img id="qv-main-image" src="" alt="Product" class="w-100 h-100" style="object-fit: contain;">
                                 </div>
-                                <div class="thumbnails-container">
-                                    <div class="slider-arrow prev-thumb"><i class="bi bi-chevron-left"></i></div>
-                                    <div class="thumbnail-slider" id="qv-thumbnails">
+                                <div class="thumbnails-container d-flex align-items-center gap-2">
+                                    <button class="btn btn-outline-secondary btn-sm rounded-circle prev-thumb" style="width: 36px; height: 36px;">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </button>
+                                    <div class="thumbnail-slider flex-grow-1 d-flex gap-2 overflow-auto" id="qv-thumbnails" style="scroll-behavior: smooth;">
                                         <!-- Thumbnails injected by JS -->
                                     </div>
-                                    <div class="slider-arrow next-thumb"><i class="bi bi-chevron-right"></i></div>
+                                    <button class="btn btn-outline-secondary btn-sm rounded-circle next-thumb" style="width: 36px; height: 36px;">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -393,7 +467,7 @@
                             <div class="p-5">
                                 <h2 class="fw-bold mb-2" id="qv-title">Product Name</h2>
                                 <div class="mb-3">
-                                    <span class="fs-3 fw-bold text-danger me-2" id="qv-price">PKR0.00</span>
+                                    <span class="fs-3 fw-bold text-primary me-2" id="qv-price">PKR0.00</span>
                                     <span class="text-muted text-decoration-line-through me-2" id="qv-old-price"></span>
                                     <span class="badge bg-success bg-opacity-10 text-success"
                                         id="qv-discount-badge"></span>
@@ -410,12 +484,21 @@
 
                                 <p class="text-secondary mb-4" id="qv-description">Description...</p>
 
-                                <div class="d-flex flex-column gap-2 mb-4 text-muted small">
-                                    <div><i class="bi bi-shield-check text-success me-2"></i> 1 Year AL Jazeera Brand
-                                        Warranty</div>
-                                    <div><i class="bi bi-arrow-repeat text-danger me-2"></i> 30 Day Return Policy</div>
-                                    <div><i class="bi bi-cash-stack text-warning me-2"></i> Cash on Delivery available
+                                <div id="qv-variant-sections" class="mb-4">
+                                    <div id="qv-color-wrap" class="mb-3 d-none">
+                                        <label class="form-label fw-bold mb-2">Color: <span id="qv-selected-color-text"></span></label>
+                                        <div id="qv-colors" class="d-flex gap-2 flex-wrap"></div>
                                     </div>
+                                    <div id="qv-size-wrap" class="mb-3 d-none">
+                                        <label class="form-label fw-bold mb-2">Size: <span id="qv-selected-size-text"></span></label>
+                                        <div id="qv-sizes" class="d-flex gap-2 flex-wrap"></div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-column gap-2 mb-4 text-muted small">
+                                    <div><i class="bi bi-shield-check text-success me-2"></i> 1 Year Brand Warranty</div>
+                                    <div><i class="bi bi-arrow-repeat text-danger me-2"></i> 30 Day Return Policy</div>
+                                    <div><i class="bi bi-cash-stack text-warning me-2"></i> Cash on Delivery available</div>
                                 </div>
 
                                 <hr class="my-4">
@@ -423,6 +506,8 @@
                                 <form id="qv-add-to-cart-form" action="{{ route('cart.store') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="product_id" id="qv-product-id">
+                                    <input type="hidden" name="color" id="qv-selected-color" value="">
+                                    <input type="hidden" name="size" id="qv-selected-size" value="">
                                     <div class="row g-3 align-items-center mb-4">
                                         <div class="col-auto">
                                             <div class="input-group" style="width: 140px;">
@@ -435,14 +520,13 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold">
-                                                <i class="fas fa-shopping-cart me-2"></i> Add To Cart
+                                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">
+                                                <i class="bi bi-cart-plus me-2"></i> Add To Cart
                                             </button>
                                         </div>
                                         <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-secondary btn-lg"
-                                                title="Wishlist">
-                                                <i class="fas fa-heart"></i>
+                                            <button type="button" class="btn btn-outline-secondary btn-lg" id="qv-wishlist-btn" title="Wishlist">
+                                                <i class="bi bi-heart"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -470,46 +554,40 @@
             // --- Fly Animation Start ---
             const cartIcon = document.getElementById('cart-icon-container');
             if (cartIcon) {
-                // Create a flying element (envelope/circle)
                 const flyer = document.createElement('div');
                 flyer.style.position = 'fixed';
                 flyer.style.zIndex = '9999';
                 flyer.style.width = '30px';
                 flyer.style.height = '30px';
                 flyer.style.borderRadius = '50%';
-                flyer.style.backgroundColor = '#e74c3c'; // Theme color
+                flyer.style.backgroundColor = 'var(--primary-color)';
                 flyer.style.color = '#fff';
                 flyer.style.display = 'flex';
                 flyer.style.alignItems = 'center';
                 flyer.style.justifyContent = 'center';
-                flyer.innerHTML = '<i class="fas fa-envelope"></i>'; // Envelope icon as requested
+                flyer.innerHTML = '<i class="bi bi-bag-plus"></i>';
                 flyer.style.transition = 'all 0.8s ease-in-out';
 
                 document.body.appendChild(flyer);
 
-                // Initial Position (at button)
                 const buttonRect = button.getBoundingClientRect();
                 flyer.style.top = (buttonRect.top + buttonRect.height / 2) + 'px';
                 flyer.style.left = (buttonRect.left + buttonRect.width / 2) + 'px';
 
-                // Target Position (at cart icon)
                 const cartRect = cartIcon.getBoundingClientRect();
 
-                // Trigger Animation
                 requestAnimationFrame(() => {
                     flyer.style.top = (cartRect.top + cartRect.height / 2) + 'px';
                     flyer.style.left = (cartRect.left + cartRect.width / 2) + 'px';
-                    flyer.style.width = '10px'; // Shrink effect
+                    flyer.style.width = '10px';
                     flyer.style.height = '10px';
                     flyer.style.opacity = '0.5';
                 });
 
-                // Cleanup
                 setTimeout(() => {
                     flyer.remove();
                 }, 800);
             }
-            // --- Fly Animation End ---
 
             // AJAX Request
             fetch('{{ route('cart.store') }}', {
@@ -529,25 +607,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Update Cart Badge
                     const badge = document.getElementById('cart-badge');
                     if (badge) {
-                        // If server returns new count, use it. Otherwise increment.
                         if (data.cart_count !== undefined) {
                             badge.innerText = data.cart_count;
                         } else {
                             badge.innerText = parseInt(badge.innerText) + 1;
                         }
                     }
-
                     showNotification('Product added to cart!', 'success');
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    // Fallback for non-JSON responses or errors (e.g., if strictly redirecting)
-                    // You might need to adjust based on your specific CartController implementation.
-                    // If it redirects, we might just assume success for the visual prototype 
-                    // or parse the redirect. For now, we update the badge optimistically or reload.
                     const badge = document.getElementById('cart-badge');
                     if (badge) badge.innerText = parseInt(badge.innerText) + 1;
                     showNotification('Product added to cart!', 'success');
@@ -556,6 +627,11 @@
 
         function addToWishlist(event, productId) {
             event.preventDefault();
+            const button = event.currentTarget;
+            const icon = button.querySelector('i');
+            
+            // Show loading state
+            if (icon) icon.className = 'bi bi-hourglass-split';
 
             fetch('{{ route('wishlist.store') }}', {
                     method: 'POST',
@@ -569,49 +645,128 @@
                     })
                 })
                 .then(response => {
-                    if (response.redirected) window.location.href = response.url; // Handle auth redirect
-                    return response.json().catch(() => ({})); // Handle cases with no JSON
+                    if (response.status === 401) {
+                        // User not logged in - redirect to login
+                        showNotification('Please login to add items to wishlist!', 'error');
+                        setTimeout(() => {
+                            window.location.href = '{{ route("login") }}';
+                        }, 1500);
+                        throw new Error('Unauthenticated');
+                    }
+                    return response.json();
                 })
                 .then(data => {
-                    showNotification('Added to Wishlist!', 'success');
+                    if (icon) icon.className = 'bi bi-heart-fill';
+                    button.classList.add('text-danger');
+                    showNotification(data.message || 'Added to Wishlist!', 'success');
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Added to Wishlist!', 'success');
+                    if (error.message !== 'Unauthenticated') {
+                        console.error('Error:', error);
+                        if (icon) icon.className = 'bi bi-heart';
+                    }
                 });
         }
 
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerText = message;
-            document.body.appendChild(notification);
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease forwards';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
         function openQuickView(product) {
-            // Populate Modal Data
+            if (qvSliderInterval) {
+                clearInterval(qvSliderInterval);
+                qvSliderInterval = null;
+            }
+
             document.getElementById('qv-title').innerText = product.name;
-            document.getElementById('qv-price').innerText = 'PKR' + parseFloat(product.price).toFixed(2);
-            document.getElementById('qv-description').innerText = product.description;
-            // document.getElementById('qv-category').innerText = product.category.name; // Simplification
+            document.getElementById('qv-price').innerText = 'PKR ' + parseFloat(product.price).toFixed(2);
+            document.getElementById('qv-description').innerText = product.description || '';
             document.getElementById('qv-product-id').value = product.id;
 
-            // Images
+            const wishlistBtn = document.getElementById('qv-wishlist-btn');
+            if (wishlistBtn) {
+                const icon = wishlistBtn.querySelector('i');
+                if (icon) icon.className = 'bi bi-heart';
+                wishlistBtn.classList.remove('text-danger');
+                wishlistBtn.onclick = (e) => addToWishlist(e, product.id);
+            }
+
+            const colorWrap = document.getElementById('qv-color-wrap');
+            const sizeWrap = document.getElementById('qv-size-wrap');
+            const colorsEl = document.getElementById('qv-colors');
+            const sizesEl = document.getElementById('qv-sizes');
+            const selectedColorInput = document.getElementById('qv-selected-color');
+            const selectedSizeInput = document.getElementById('qv-selected-size');
+            const selectedColorText = document.getElementById('qv-selected-color-text');
+            const selectedSizeText = document.getElementById('qv-selected-size-text');
+
+            if (colorsEl) colorsEl.innerHTML = '';
+            if (sizesEl) sizesEl.innerHTML = '';
+
+            const productColors = Array.isArray(product.color_options) ? product.color_options : [];
+            const productSizes = Array.isArray(product.sizes) ? product.sizes : [];
+
+            function selectQvColor(value, btn) {
+                if (selectedColorInput) selectedColorInput.value = value || '';
+                if (selectedColorText) selectedColorText.innerText = value || '';
+                if (colorsEl) {
+                    colorsEl.querySelectorAll('button').forEach(b => b.classList.remove('border-dark'));
+                }
+                if (btn) btn.classList.add('border-dark');
+            }
+
+            function selectQvSize(value, btn) {
+                if (selectedSizeInput) selectedSizeInput.value = value || '';
+                if (selectedSizeText) selectedSizeText.innerText = value || '';
+                if (sizesEl) {
+                    sizesEl.querySelectorAll('button').forEach(b => {
+                        b.classList.remove('btn-dark');
+                        b.classList.add('btn-outline-secondary');
+                    });
+                }
+                if (btn) {
+                    btn.classList.remove('btn-outline-secondary');
+                    btn.classList.add('btn-dark');
+                }
+            }
+
+            if (productColors.length > 0 && colorWrap && colorsEl) {
+                colorWrap.classList.remove('d-none');
+                productColors.forEach((c, idx) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'btn btn-outline-secondary rounded-pill px-3 py-1 border-2';
+                    b.innerText = c;
+                    b.onclick = () => selectQvColor(c, b);
+                    colorsEl.appendChild(b);
+                    if (idx === 0) selectQvColor(c, b);
+                });
+            } else if (colorWrap) {
+                colorWrap.classList.add('d-none');
+                if (selectedColorInput) selectedColorInput.value = '';
+                if (selectedColorText) selectedColorText.innerText = '';
+            }
+
+            if (productSizes.length > 0 && sizeWrap && sizesEl) {
+                sizeWrap.classList.remove('d-none');
+                productSizes.forEach((s, idx) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'btn btn-outline-secondary rounded-pill px-3 py-1';
+                    b.innerText = s;
+                    b.onclick = () => selectQvSize(s, b);
+                    sizesEl.appendChild(b);
+                    if (idx === 0) selectQvSize(s, b);
+                });
+            } else if (sizeWrap) {
+                sizeWrap.classList.add('d-none');
+                if (selectedSizeInput) selectedSizeInput.value = '';
+                if (selectedSizeText) selectedSizeText.innerText = '';
+            }
+
             const mainImage = document.getElementById('qv-main-image');
             const thumbnailsContainer = document.getElementById('qv-thumbnails');
             thumbnailsContainer.innerHTML = '';
 
             let images = [];
-            // Handle if images is array or string (from dummy data it might be simple wrapper)
-            // For seeders I passed array, so it should be fine.  
-            // But seeding data was simpler. Let's assume images is array.
-            // If not, we fallback to placeholder.
             if (Array.isArray(product.images) && product.images.length > 0) {
-                images = [...product.images]; // Clone array
+                images = [...product.images];
             } else if (typeof product.images === 'string') {
                 try {
                     const parsed = JSON.parse(product.images);
@@ -624,27 +779,28 @@
                 images = ['https://placehold.co/600x800?text=Product'];
             }
 
-            // --- USER REQUEST: DUMMY SLIDER CONTENT ---
-            // If only 1 image, duplicate it for slider testing
             if (images.length === 1 && images[0]) {
-                images.push(images[0]);
                 images.push(images[0]);
                 images.push(images[0]);
             }
 
-            // Set main image
             if (images.length > 0) mainImage.src = images[0];
 
-            // Render thumbnails
+            window.qvImages = images;
+            window.qvCurrentIndex = 0;
+
             images.forEach((imgSrc, index) => {
                 const thumb = document.createElement('div');
-                thumb.className = `thumbnail-item ${index === 0 ? 'active' : ''}`;
-                thumb.innerHTML = `<img src="${imgSrc}" alt="thumb">`;
+                thumb.className = `thumbnail-item border rounded overflow-hidden ${index === 0 ? 'border-primary border-2' : ''}`;
+                thumb.style.cssText = 'min-width: 70px; width: 70px; height: 70px; cursor: pointer;';
+                thumb.innerHTML = `<img src="${imgSrc}" alt="thumb" class="w-100 h-100" style="object-fit: cover;">`;
                 thumb.onclick = () => {
+                    window.qvCurrentIndex = index;
                     mainImage.src = imgSrc;
-                    document.querySelectorAll('.thumbnail-item').forEach(el => el.classList.remove('active'));
-                    thumb.classList.add('active');
-                    // Fade effect
+                    document.querySelectorAll('.thumbnail-item').forEach(el => {
+                        el.classList.remove('border-primary', 'border-2');
+                    });
+                    thumb.classList.add('border-primary', 'border-2');
                     mainImage.style.opacity = '0.5';
                     setTimeout(() => mainImage.style.opacity = '1', 200);
                 };
@@ -652,25 +808,67 @@
             });
 
             // Setup Slider Arrow Events
-            document.querySelector('.prev-thumb').onclick = () => scrollQvThumbnails(-1);
-            document.querySelector('.next-thumb').onclick = () => scrollQvThumbnails(1);
+            const qvModalEl = document.getElementById('quickViewModal');
+            const prevBtn = qvModalEl?.querySelector('.prev-thumb');
+            const nextBtn = qvModalEl?.querySelector('.next-thumb');
+            if (prevBtn) prevBtn.onclick = () => {
+                const thumbs = document.querySelectorAll('#qv-thumbnails .thumbnail-item');
+                if (!thumbs.length) return;
+                const nextIndex = (window.qvCurrentIndex - 1 + thumbs.length) % thumbs.length;
+                thumbs[nextIndex].click();
+                thumbs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            };
+            if (nextBtn) nextBtn.onclick = () => {
+                const thumbs = document.querySelectorAll('#qv-thumbnails .thumbnail-item');
+                if (!thumbs.length) return;
+                const nextIndex = (window.qvCurrentIndex + 1) % thumbs.length;
+                thumbs[nextIndex].click();
+                thumbs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            };
 
-            // Show Modal
-            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
+            new bootstrap.Modal(qvModalEl).show();
+            // NOTE: Auto-slide disabled to allow only arrow navigation
         }
 
-        // Quick View Thumbnail Slider
         function scrollQvThumbnails(direction) {
             const container = document.getElementById('qv-thumbnails');
             if (container) {
+                const scrollAmount = 90; // thumbnail width + gap
                 container.scrollBy({
-                    left: direction * 100,
+                    left: direction * scrollAmount,
                     behavior: 'smooth'
                 });
             }
         }
+        
+        // Auto-advance slider
+        let qvSliderInterval = null;
+        function startQvSlider(images) {
+            // Auto-slide disabled: only arrow navigation allowed
+            return;
+            if (images.length <= 1) return;
+            qvSliderInterval = setInterval(() => {
+                const thumbs = document.querySelectorAll('#qv-thumbnails .thumbnail-item');
+                if (thumbs.length) {
+                    const nextIndex = ((window.qvCurrentIndex ?? 0) + 1) % thumbs.length;
+                    thumbs[nextIndex].click();
+                }
+            }, 3000);
+        }
+        
+        // Clear interval when modal is closed
+        document.addEventListener('DOMContentLoaded', function() {
+            const qvModal = document.getElementById('quickViewModal');
+            if (qvModal) {
+                qvModal.addEventListener('hidden.bs.modal', function() {
+                    if (qvSliderInterval) {
+                        clearInterval(qvSliderInterval);
+                        qvSliderInterval = null;
+                    }
+                });
+            }
+        });
 
-        // Quick View Add to Cart with Animation
         document.addEventListener('DOMContentLoaded', function() {
             const qvForm = document.getElementById('qv-add-to-cart-form');
             if (qvForm) {
@@ -680,13 +878,12 @@
                     const productId = document.getElementById('qv-product-id').value;
                     const quantity = document.getElementById('qv-quantity').value;
 
-                    // Fly Animation
                     const cartIcon = document.getElementById('cart-icon-container');
                     if (cartIcon) {
                         const flyer = document.createElement('div');
                         flyer.style.cssText =
-                            'position:fixed;z-index:10000;width:30px;height:30px;border-radius:50%;background:#e74c3c;color:#fff;display:flex;align-items:center;justify-content:center;transition:all 0.8s ease-in-out;';
-                        flyer.innerHTML = '<i class="fas fa-envelope"></i>';
+                            'position:fixed;z-index:10000;width:30px;height:30px;border-radius:50%;background:#6366f1;color:#fff;display:flex;align-items:center;justify-content:center;transition:all 0.8s ease-in-out;';
+                        flyer.innerHTML = '<i class="bi bi-bag-plus"></i>';
                         document.body.appendChild(flyer);
 
                         const buttonRect = button.getBoundingClientRect();
@@ -704,7 +901,6 @@
                         setTimeout(() => flyer.remove(), 800);
                     }
 
-                    // AJAX Submit
                     fetch('{{ route('cart.store') }}', {
                             method: 'POST',
                             headers: {
@@ -715,7 +911,9 @@
                             },
                             body: JSON.stringify({
                                 product_id: productId,
-                                quantity: parseInt(quantity)
+                                quantity: parseInt(quantity),
+                                color: document.getElementById('qv-selected-color')?.value || undefined,
+                                size: document.getElementById('qv-selected-size')?.value || undefined,
                             })
                         })
                         .then(response => response.json().catch(() => ({})))
@@ -726,7 +924,6 @@
                                     parseInt(badge.innerText) + parseInt(quantity);
                             }
                             showNotification('Product added to cart!', 'success');
-                            // Close modal after a short delay
                             setTimeout(() => {
                                 bootstrap.Modal.getInstance(document.getElementById(
                                     'quickViewModal')).hide();
@@ -742,7 +939,6 @@
             }
         });
 
-        // Qty Helpers
         function incrementQv() {
             const el = document.getElementById('qv-quantity');
             el.value = parseInt(el.value) + 1;

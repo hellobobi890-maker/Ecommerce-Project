@@ -1,145 +1,211 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-gray-50">
-        <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h2 class="sr-only">Checkout</h2>
+<div class="bg-light py-5">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('cart.index') }}">Cart</a></li>
+                <li class="breadcrumb-item active">Checkout</li>
+            </ol>
+        </nav>
 
-            <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16" action="{{ route('checkout.store') }}" method="POST">
-                @csrf
-                <div>
-                    <div>
-                        <h2 class="text-lg font-medium text-gray-900">Contact information</h2>
+        <h1 class="fw-bold mb-4">
+            <i class="bi bi-credit-card me-2"></i>Checkout
+        </h1>
 
-                        <div class="mt-4">
-                            <label for="email-address" class="block text-sm font-medium text-gray-700">Email address</label>
-                            <div class="mt-1">
-                                <input type="email" id="email-address" name="email" autocomplete="email"
-                                    value="{{ auth()->user()->email }}" disabled
-                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100">
-                            </div>
+        <form action="{{ route('checkout.store') }}" method="POST">
+            @csrf
+            <div class="row g-4">
+                <!-- Shipping Information -->
+                <div class="col-lg-7">
+                    <!-- Contact Info -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="bi bi-person me-2"></i>Contact Information</h5>
                         </div>
-                    </div>
-
-                    <div class="mt-10 border-t border-gray-200 pt-10">
-                        <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
-
-                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                            <div class="sm:col-span-2">
-                                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                <div class="mt-1">
-                                    <input type="text" name="address" id="address" autocomplete="street-address"
-                                        required
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control bg-light" value="{{ auth()->user()->name }}" disabled>
                                 </div>
-                            </div>
-
-                            <div>
-                                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                                <div class="mt-1">
-                                    <input type="text" name="city" id="city" autocomplete="address-level2"
-                                        required
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="postal_code" class="block text-sm font-medium text-gray-700">Postal code</label>
-                                <div class="mt-1">
-                                    <input type="text" name="postal_code" id="postal_code" autocomplete="postal-code"
-                                        required
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                            </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                <div class="mt-1">
-                                    <input type="tel" name="phone" id="phone" autocomplete="tel" required
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control bg-light" value="{{ auth()->user()->email }}" disabled>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-10 border-t border-gray-200 pt-10">
-                        <h2 class="text-lg font-medium text-gray-900">Payment</h2>
-
-                        <fieldset class="mt-4">
-                            <legend class="sr-only">Payment type</legend>
-                            <div class="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
-                                <div class="flex items-center">
-                                    <input id="cod" name="payment_type" type="radio" checked
-                                        class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                    <label for="cod" class="ml-3 block text-sm font-medium text-gray-700">Cash on
-                                        Delivery</label>
+                    <!-- Shipping Address -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="bi bi-truck me-2"></i>Shipping Address</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Address <span class="text-danger">*</span></label>
+                                    <input type="text" name="address" class="form-control @error('address') is-invalid @enderror" 
+                                           placeholder="Street address, House no." required value="{{ old('address') }}">
+                                    @error('address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">City <span class="text-danger">*</span></label>
+                                    <select name="city" class="form-select @error('city') is-invalid @enderror" required>
+                                        <option value="">Select City</option>
+                                        <option value="Karachi" {{ old('city') == 'Karachi' ? 'selected' : '' }}>Karachi</option>
+                                        <option value="Lahore" {{ old('city') == 'Lahore' ? 'selected' : '' }}>Lahore</option>
+                                        <option value="Islamabad" {{ old('city') == 'Islamabad' ? 'selected' : '' }}>Islamabad</option>
+                                        <option value="Rawalpindi" {{ old('city') == 'Rawalpindi' ? 'selected' : '' }}>Rawalpindi</option>
+                                        <option value="Faisalabad" {{ old('city') == 'Faisalabad' ? 'selected' : '' }}>Faisalabad</option>
+                                        <option value="Multan" {{ old('city') == 'Multan' ? 'selected' : '' }}>Multan</option>
+                                        <option value="Peshawar" {{ old('city') == 'Peshawar' ? 'selected' : '' }}>Peshawar</option>
+                                        <option value="Quetta" {{ old('city') == 'Quetta' ? 'selected' : '' }}>Quetta</option>
+                                        <option value="Other" {{ old('city') == 'Other' ? 'selected' : '' }}>Other</option>
+                                    </select>
+                                    @error('city')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Postal Code <span class="text-danger">*</span></label>
+                                    <input type="text" name="postal_code" class="form-control @error('postal_code') is-invalid @enderror" 
+                                           placeholder="e.g. 75500" required value="{{ old('postal_code') }}">
+                                    @error('postal_code')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Phone <span class="text-danger">*</span></label>
+                                    <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror" 
+                                           placeholder="03XX-XXXXXXX" required value="{{ old('phone') }}">
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Order Notes (Optional)</label>
+                                    <textarea name="notes" class="form-control" rows="2" 
+                                              placeholder="Delivery instructions, landmarks, etc.">{{ old('notes') }}</textarea>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Order summary -->
-                <div class="mt-10 lg:mt-0">
-                    <h2 class="text-lg font-medium text-gray-900">Order summary</h2>
-
-                    <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
-                        <h3 class="sr-only">Items in your cart</h3>
-                        <ul role="list" class="divide-y divide-gray-200">
-                            @foreach ($cart as $details)
-                                <li class="flex px-4 py-6 sm:px-6">
-                                    <div class="flex-shrink-0">
-                                        <img src="{{ $details['image'] ?? 'https://tailwindui.com/plus/img/ecommerce-images/checkout-page-04-product-01.jpg' }}"
-                                            alt="" class="w-20 rounded-md">
-                                    </div>
-
-                                    <div class="ml-6 flex flex-1 flex-col">
-                                        <div class="flex">
-                                            <div class="min-w-0 flex-1">
-                                                <h4 class="text-sm">
-                                                    <a href="#"
-                                                        class="font-medium text-gray-700 hover:text-gray-800">{{ $details['name'] }}</a>
-                                                </h4>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex flex-1 items-end justify-between pt-2">
-                                            <p class="mt-1 text-sm font-medium text-gray-900">
-                                                ${{ number_format($details['price'], 2) }}</p>
-                                            <p class="mt-1 text-sm font-medium text-gray-500">Qty {{ $details['quantity'] }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                        <dl class="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
-                            <div class="flex items-center justify-between">
-                                <dt class="text-sm">Subtotal</dt>
-                                <dd class="text-sm font-medium text-gray-900">
-                                    ${{ number_format(collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']), 2) }}
-                                </dd>
+                    <!-- Payment Method -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="bi bi-wallet2 me-2"></i>Payment Method</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-3 p-3 border rounded bg-light">
+                                <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
+                                <label class="form-check-label ms-2" for="cod">
+                                    <strong><i class="bi bi-cash-stack me-2"></i>Cash on Delivery (COD)</strong>
+                                    <p class="text-muted small mb-0 mt-1">Pay when you receive your order</p>
+                                </label>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <dt class="text-sm">Shipping</dt>
-                                <dd class="text-sm font-medium text-gray-900">$5.00</dd>
+                            <div class="alert alert-info small mb-0">
+                                <i class="bi bi-info-circle me-2"></i>More payment options coming soon!
                             </div>
-                            <div class="flex items-center justify-between border-t border-gray-200 pt-6">
-                                <dt class="text-base font-medium">Total</dt>
-                                <dd class="text-base font-medium text-gray-900">
-                                    ${{ number_format(collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']) + 5, 2) }}
-                                </dd>
-                            </div>
-                        </dl>
-
-                        <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                            <button type="submit"
-                                class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Confirm
-                                Order</button>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-5">
+                    <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="bi bi-receipt me-2"></i>Order Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Cart Items -->
+                            <div class="mb-4" style="max-height: 300px; overflow-y: auto;">
+                                @foreach ($cart as $id => $details)
+                                    <div class="d-flex gap-3 mb-3 pb-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                        <div class="flex-shrink-0">
+                                            <img src="{{ $details['image'] ?? 'https://placehold.co/60x60?text=Product' }}"
+                                                 class="rounded" width="60" height="60" style="object-fit: cover;">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 small fw-bold">{{ Str::limit($details['name'], 30) }}</h6>
+                                            @if(isset($details['size']) && $details['size'] != 'default')
+                                                <small class="text-muted me-1">Size: {{ $details['size'] }}</small>
+                                            @endif
+                                            @if(isset($details['color']) && $details['color'] != 'default')
+                                                <small class="text-muted">Color: {{ $details['color'] }}</small>
+                                            @endif
+                                            <div class="small text-muted">Qty: {{ $details['quantity'] }}</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <strong>PKR {{ number_format($details['price'] * $details['quantity'], 2) }}</strong>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <hr>
+
+                            <!-- Totals -->
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Subtotal</span>
+                                <span>PKR {{ number_format($subtotal, 2) }}</span>
+                            </div>
+
+                            @if($discount > 0)
+                            <div class="d-flex justify-content-between mb-2 text-success">
+                                <span><i class="bi bi-ticket-perforated me-1"></i>{{ $coupon['code'] ?? 'Discount' }}</span>
+                                <span>-PKR {{ number_format($discount, 2) }}</span>
+                            </div>
+                            @endif
+
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Shipping</span>
+                                <span>PKR {{ number_format($shipping, 2) }}</span>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="fs-5 fw-bold">Total</span>
+                                <span class="fs-5 fw-bold text-primary">PKR {{ number_format($total, 2) }}</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">
+                                <i class="bi bi-lock me-2"></i>Place Order
+                            </button>
+
+                            <div class="text-center mt-3">
+                                <a href="{{ route('cart.index') }}" class="text-muted small">
+                                    <i class="bi bi-arrow-left me-1"></i>Back to Cart
+                                </a>
+                            </div>
+
+                            <!-- Trust Badges -->
+                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                <div class="text-center">
+                                    <i class="bi bi-shield-check text-success fs-4"></i>
+                                    <div class="small text-muted">Secure</div>
+                                </div>
+                                <div class="text-center">
+                                    <i class="bi bi-truck text-primary fs-4"></i>
+                                    <div class="small text-muted">Fast Delivery</div>
+                                </div>
+                                <div class="text-center">
+                                    <i class="bi bi-arrow-repeat text-warning fs-4"></i>
+                                    <div class="small text-muted">Easy Returns</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 @endsection

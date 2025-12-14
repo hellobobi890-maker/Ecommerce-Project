@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
@@ -50,6 +51,7 @@ class ProductController extends Controller
             'badge_text' => 'nullable|string|max:50',
             'color_options' => 'nullable|array',
             'sizes' => 'nullable|array',
+            'variant_stock' => 'nullable|array',
             'is_active' => 'boolean',
         ]);
 
@@ -77,7 +79,8 @@ class ProductController extends Controller
 
         $validated['images'] = array_values($images);
 
-        Product::create($validated);
+        $product = Product::create($validated);
+        $this->syncVariants($product, $request);
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -95,6 +98,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $product->load('variants');
         $categories = Category::where('is_active', true)->get();
         return view('admin.products.edit', compact('product', 'categories'));
     }
@@ -120,6 +124,7 @@ class ProductController extends Controller
             'badge_text' => 'nullable|string|max:50',
             'color_options' => 'nullable|array',
             'sizes' => 'nullable|array',
+            'variant_stock' => 'nullable|array',
             'is_active' => 'boolean',
         ]);
 
@@ -170,7 +175,56 @@ class ProductController extends Controller
 
         $product->update($validated);
 
+        $this->syncVariants($product, $request);
+
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    }
+
+    private function syncVariants(Product $product, Request $request): void
+    {
+        $colors = $request->input('color_options', []);
+        $sizes = $request->input('sizes', []);
+
+        $colors = is_array($colors) ? array_values(array_filter($colors, fn($v) => $v !== null && $v !== '')) : [];
+        $sizes = is_array($sizes) ? array_values(array_filter($sizes, fn($v) => $v !== null && $v !== '')) : [];
+
+        $variantStock = $request->input('variant_stock', []);
+        $variantStock = is_array($variantStock) ? $variantStock : [];
+
+        if (count($colors) === 0 && count($sizes) === 0) {
+            if ($product->variants()->exists()) {
+                $product->variants()->delete();
+            }
+            return;
+        }
+
+        $wantedKeys = [];
+        $totalStock = 0;
+
+        $useColors = count($colors) > 0 ? $colors : [null];
+        $useSizes = count($sizes) > 0 ? $sizes : [null];
+
+        foreach ($useColors as $color) {
+            foreach ($useSizes as $size) {
+                $key = $product->makeVariantKey($color, $size);
+                $wantedKeys[] = $key;
+
+                $stockValue = (int) ($variantStock[$key] ?? 0);
+                if ($stockValue < 0) {
+                    $stockValue = 0;
+                }
+
+                ProductVariant::updateOrCreate(
+                    ['product_id' => $product->id, 'variant_key' => $key],
+                    ['color' => $color, 'size' => $size, 'stock' => $stockValue]
+                );
+
+                $totalStock += $stockValue;
+            }
+        }
+
+        $product->variants()->whereNotIn('variant_key', $wantedKeys)->delete();
+        $product->update(['stock' => $totalStock]);
     }
 
     /**

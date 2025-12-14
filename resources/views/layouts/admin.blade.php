@@ -158,6 +158,12 @@
                     <i class="fas fa-shopping-cart"></i> Orders
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.coupons.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                    <i class="fas fa-ticket-alt"></i> Coupons
+                </a>
+            </li>
             <li class="nav-item mt-auto">
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf

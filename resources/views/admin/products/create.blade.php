@@ -111,6 +111,13 @@
                                                 @endforeach
                                             </div>
                                         </div>
+
+                                        <div class="mt-4">
+                                            <label class="form-label fw-bold small d-block">Variant Stock (Per Color / Size)</label>
+                                            <div class="bg-white rounded border p-3">
+                                                <div id="variant-stock-grid" class="table-responsive"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -194,6 +201,99 @@
                             <button type="submit" class="btn btn-primary px-4">Save Product</button>
                         </div>
                     </form>
+
+                    <script>
+                        (function() {
+                            function normalizeKeyPart(value) {
+                                if (value === null || value === undefined) return '-';
+                                const v = String(value).trim().toLowerCase();
+                                return v === '' ? '-' : v;
+                            }
+
+                            function makeKey(color, size) {
+                                return normalizeKeyPart(color) + '|' + normalizeKeyPart(size);
+                            }
+
+                            function getCheckedValues(name) {
+                                return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(i => i.value);
+                            }
+
+                            function getExistingStockMap() {
+                                const map = {};
+                                document.querySelectorAll('#variant-stock-grid input[data-variant-key]').forEach((el) => {
+                                    map[el.getAttribute('data-variant-key')] = el.value;
+                                });
+                                return map;
+                            }
+
+                            function updateTotalStock() {
+                                const stockInput = document.getElementById('stock');
+                                if (!stockInput) return;
+
+                                const inputs = document.querySelectorAll('#variant-stock-grid input[data-variant-key]');
+                                if (inputs.length === 0) return;
+
+                                let total = 0;
+                                inputs.forEach((el) => {
+                                    const n = parseInt(el.value || '0', 10);
+                                    total += isNaN(n) ? 0 : n;
+                                });
+                                stockInput.value = total;
+                            }
+
+                            function rebuildGrid() {
+                                const colors = getCheckedValues('color_options[]');
+                                const sizes = getCheckedValues('sizes[]');
+                                const grid = document.getElementById('variant-stock-grid');
+                                if (!grid) return;
+
+                                const previous = getExistingStockMap();
+                                const useColors = colors.length > 0 ? colors : [null];
+                                const useSizes = sizes.length > 0 ? sizes : [null];
+
+                                if (colors.length === 0 && sizes.length === 0) {
+                                    grid.innerHTML = '<div class="text-muted small">Select at least one color or size to manage per-variant stock.</div>';
+                                    return;
+                                }
+
+                                let html = '';
+                                html += '<table class="table table-sm align-middle mb-0">';
+                                html += '<thead><tr><th class="text-muted small">Color \\ Size</th>';
+                                useSizes.forEach((s) => {
+                                    html += '<th class="text-muted small">' + (s ?? '-') + '</th>';
+                                });
+                                html += '</tr></thead>';
+                                html += '<tbody>';
+                                useColors.forEach((c) => {
+                                    html += '<tr>';
+                                    html += '<td class="fw-medium">' + (c ?? '-') + '</td>';
+                                    useSizes.forEach((s) => {
+                                        const key = makeKey(c, s);
+                                        const val = previous[key] ?? '0';
+                                        html += '<td style="min-width: 120px;">';
+                                        html += '<input type="number" min="0" class="form-control form-control-sm" name="variant_stock[' + key + ']" value="' + String(val).replace(/"/g, '&quot;') + '" data-variant-key="' + key + '">';
+                                        html += '</td>';
+                                    });
+                                    html += '</tr>';
+                                });
+                                html += '</tbody></table>';
+
+                                grid.innerHTML = html;
+
+                                grid.querySelectorAll('input[data-variant-key]').forEach((el) => {
+                                    el.addEventListener('input', updateTotalStock);
+                                });
+
+                                updateTotalStock();
+                            }
+
+                            document.querySelectorAll('input[name="color_options[]"], input[name="sizes[]"]').forEach((el) => {
+                                el.addEventListener('change', rebuildGrid);
+                            });
+
+                            rebuildGrid();
+                        })();
+                    </script>
                 </div>
             </div>
         </div>

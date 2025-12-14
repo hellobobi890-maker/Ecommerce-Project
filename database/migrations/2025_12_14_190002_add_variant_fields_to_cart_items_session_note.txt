@@ -1,0 +1,1 @@
+Cart is session-based; variant_id will be stored in session item as product_variant_id and used for stock validation/decrement.
