@@ -71,7 +71,7 @@
                                         {{ ucfirst($order->status) }}
                                     </span>
                                 </td>
-                                <td class="fw-bold">${{ number_format($order->total_amount, 2) }}</td>
+                                <td class="fw-bold">PKR {{ number_format($order->total_amount, 2) }}</td>
                                 <td class="pe-4 text-end">
                                     <a href="{{ route('admin.orders.show', $order->id) }}"
                                         class="btn btn-sm btn-light text-primary" title="View Details">

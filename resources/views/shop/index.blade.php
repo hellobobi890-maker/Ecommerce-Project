@@ -86,13 +86,10 @@
                                             $data = $sizeData[$size] ?? ['count' => 0, 'in_stock' => 0];
                                             $isSoldOut = $data['in_stock'] == 0;
                                         @endphp
-                                        <a href="{{ route('shop.index', array_merge(request()->query(), ['size' => $size])) }}" 
-                                           class="btn btn-sm position-relative {{ request('size') == $size ? 'btn-primary' : ($isSoldOut ? 'btn-outline-secondary opacity-50' : 'btn-outline-secondary') }}"
-                                           @if($isSoldOut) style="text-decoration: line-through;" @endif>
+                                        <a href="{{ $isSoldOut ? '#' : route('shop.index', array_merge(request()->query(), ['size' => $size])) }}" 
+                                           class="btn btn-sm {{ request('size') == $size ? 'btn-primary' : ($isSoldOut ? 'btn-outline-secondary opacity-50' : 'btn-outline-secondary') }}"
+                                           @if($isSoldOut) aria-disabled="true" onclick="return false" style="text-decoration: line-through; pointer-events: none;" @endif>
                                             {{ $size }}
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-{{ request('size') == $size ? 'light text-primary' : ($isSoldOut ? 'secondary' : 'danger') }}" style="font-size: 0.65rem;">
-                                                {{ $data['count'] }}
-                                            </span>
                                             @if($isSoldOut)
                                                 <span class="d-block" style="font-size: 0.6rem; margin-top: -2px;">Sold Out</span>
                                             @endif
@@ -127,17 +124,16 @@
                                             $isSoldOut = $data['in_stock'] == 0;
                                             $colorHex = $colorMap[$color] ?? $color;
                                         @endphp
-                                        <a href="{{ route('shop.index', array_merge(request()->query(), ['color' => $color])) }}"
+                                        <a href="{{ $isSoldOut ? '#' : route('shop.index', array_merge(request()->query(), ['color' => $color])) }}"
                                            class="color-filter-btn d-flex flex-column align-items-center text-decoration-none {{ request('color') == $color ? 'selected' : ($isSoldOut ? 'opacity-50' : '') }}"
-                                           title="{{ $color }} ({{ $data['count'] }})"
-                                           @if($isSoldOut) style="text-decoration: line-through;" @endif>
+                                           title="{{ $color }}"
+                                           @if($isSoldOut) aria-disabled="true" onclick="return false" style="text-decoration: line-through; pointer-events: none;" @endif>
                                             <div class="color-circle {{ request('color') == $color ? 'ring-primary' : '' }}"
                                                  style="background-color: {{ $colorHex }}; {{ $color == 'White' ? 'border: 1px solid #dee2e6;' : '' }}">
                                                 @if(request('color') == $color)
                                                     <i class="bi bi-check2 {{ $color == 'White' ? 'text-dark' : 'text-white' }}"></i>
                                                 @endif
                                             </div>
-                                            <small class="text-muted" style="font-size: 0.7rem;">{{ $data['count'] }}</small>
                                             @if($isSoldOut)
                                                 <span class="d-block text-muted" style="font-size: 0.6rem; margin-top: -2px;">Sold Out</span>
                                             @endif
@@ -178,7 +174,7 @@
                         of <strong>{{ $products->total() }}</strong> products
                     </div>
                     <div class="d-flex align-items-center gap-3">
-                        <select name="sort" class="form-select form-select-sm" style="width: auto;"
+                        <select name="sort" class="form-select shop-sort-select"
                                 onchange="window.location.href = '{{ route('shop.index') }}?' + new URLSearchParams({...Object.fromEntries(new URLSearchParams(window.location.search)), sort: this.value}).toString()">
                             <option value="">Sort By</option>
                             <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>

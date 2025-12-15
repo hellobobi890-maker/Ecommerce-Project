@@ -1,0 +1,121 @@
+/* Home Page Styles */
+
+/* Hero Section */
+.hero-section {
+    background: var(--bg-light);
+    padding: 80px 0;
+}
+
+/* Hero Carousel */
+#heroCarousel .carousel-item {
+    height: 600px;
+}
+
+#heroCarousel .carousel-caption {
+    bottom: 50%;
+    transform: translateY(50%);
+}
+
+@media (max-width: 768px) {
+    #heroCarousel .carousel-item {
+        height: 350px;
+    }
+
+    #heroCarousel .carousel-caption h1 {
+        font-size: 1.75rem;
+    }
+
+    #heroCarousel .carousel-caption p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animate Fade Up */
+.animate-fade-up {
+    animation: fadeUp 0.8s ease-out;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Collection Cards */
+.collection-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+}
+
+.collection-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.collection-card .collection-img img {
+    transition: transform 0.5s ease;
+}
+
+.collection-card:hover .collection-img img {
+    transform: scale(1.1);
+}
+
+.collection-overlay {
+    background: rgba(0, 0, 0, 0.55);
+    transition: all 0.3s ease;
+}
+
+.collection-card:hover .collection-overlay {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.collection-content {
+    transform: translateY(10px);
+    transition: transform 0.3s ease;
+}
+
+.collection-card:hover .collection-content {
+    transform: translateY(0);
+}
+
+/* Letter Spacing Utility */
+.letter-spacing-1 {
+    letter-spacing: 1px;
+}
+
+.letter-spacing-2 {
+    letter-spacing: 2px;
+}
+
+/* Why Choose Us Icons Animation */
+.why-choose-icon {
+    transition: transform 0.3s ease;
+}
+
+.why-choose-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Newsletter Section */
+.newsletter-section {
+    background: var(--gradient-hero);
+}
+
+.newsletter-section input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}

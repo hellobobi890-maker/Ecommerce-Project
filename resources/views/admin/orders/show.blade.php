@@ -46,21 +46,28 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="rounded-3 overflow-hidden me-3 flex-shrink-0"
                                                     style="width: 60px; height: 60px;">
-                                                    <img src="{{ $item->product->image ?? 'https://dummyimage.com/100x100/dee2e6/6c757d.jpg' }}"
-                                                        alt="{{ $item->product->name }}"
+                                                    @php
+                                                        $img = null;
+                                                        if ($item->product && is_array($item->product->images) && count($item->product->images) > 0) {
+                                                            $img = $item->product->images[0];
+                                                        }
+                                                        $img = $img ?: 'https://placehold.co/100x100?text=Product';
+                                                    @endphp
+                                                    <img src="{{ $img }}"
+                                                        alt="{{ $item->product->name ?? 'Product' }}"
                                                         class="w-100 h-100 object-fit-cover">
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0 fw-bold">{{ $item->product->name }}</h6>
+                                                    <h6 class="mb-0 fw-bold">{{ $item->product->name ?? 'Product Deleted' }}</h6>
                                                     <small
                                                         class="text-muted">{{ $item->product->category->name ?? 'Uncategorized' }}</small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="border-bottom-0">${{ number_format($item->price, 2) }}</td>
+                                        <td class="border-bottom-0">PKR {{ number_format($item->price, 2) }}</td>
                                         <td class="border-bottom-0">{{ $item->quantity }}</td>
                                         <td class="pe-4 border-bottom-0 text-end fw-bold">
-                                            ${{ number_format($item->price * $item->quantity, 2) }}</td>
+                                            PKR {{ number_format($item->price * $item->quantity, 2) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -68,7 +75,7 @@
                                 <tr>
                                     <td colspan="3" class="text-end py-3 fw-bold">Total Amount</td>
                                     <td class="pe-4 py-3 text-end fw-bold h5 text-primary">
-                                        ${{ number_format($order->total_amount, 2) }}</td>
+                                        PKR {{ number_format($order->total_amount, 2) }}</td>
                                 </tr>
                             </tfoot>
                         </table>

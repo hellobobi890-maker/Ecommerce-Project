@@ -14,6 +14,43 @@ use App\Models\Coupon;
 
 class CheckoutController extends Controller
 {
+    private int $shippingFee = 200;
+
+    private function cartSubtotal(array $cart): float
+    {
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += (float) ($item['price'] ?? 0) * (int) ($item['quantity'] ?? 1);
+        }
+        return (float) $subtotal;
+    }
+
+    private function refreshAppliedCoupon(float $subtotal): ?array
+    {
+        $couponSession = Session::get('applied_coupon');
+        if (!$couponSession || empty($couponSession['id'])) {
+            return null;
+        }
+
+        $couponModel = Coupon::find($couponSession['id']);
+        if (!$couponModel || !$couponModel->isValid($subtotal)) {
+            Session::forget('applied_coupon');
+            return null;
+        }
+
+        $discountAmount = $couponModel->calculateDiscount($subtotal);
+        $updated = [
+            'id' => $couponModel->id,
+            'code' => $couponModel->code,
+            'discount_type' => $couponModel->discount_type,
+            'discount_value' => $couponModel->discount_value,
+            'discount_amount' => $discountAmount,
+        ];
+
+        Session::put('applied_coupon', $updated);
+        return $updated;
+    }
+
     /**
      * Display the checkout page.
      */
@@ -27,14 +64,11 @@ class CheckoutController extends Controller
         }
 
         // Calculate totals
-        $subtotal = 0;
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-        }
-        
-        $discount = $coupon ? $coupon['discount_amount'] : 0;
-        $shipping = 200; // PKR 200 shipping
-        $total = $subtotal - $discount + $shipping;
+        $subtotal = $this->cartSubtotal($cart);
+        $coupon = $this->refreshAppliedCoupon($subtotal);
+        $discount = $coupon ? (float) ($coupon['discount_amount'] ?? 0) : 0;
+        $shipping = $this->shippingFee; // PKR shipping
+        $total = max(0, $subtotal - $discount) + $shipping;
 
         return view('checkout.index', compact('cart', 'coupon', 'subtotal', 'discount', 'shipping', 'total'));
     }
@@ -96,15 +130,11 @@ class CheckoutController extends Controller
             }
 
             // Calculate totals
-            $subtotal = 0;
-            foreach ($cart as $details) {
-                $subtotal += $details['price'] * $details['quantity'];
-            }
-            
-            $coupon = Session::get('applied_coupon');
-            $discount = $coupon ? $coupon['discount_amount'] : 0;
-            $shipping = 200; // PKR 200 shipping
-            $totalAmount = $subtotal - $discount + $shipping;
+            $subtotal = $this->cartSubtotal($cart);
+            $coupon = $this->refreshAppliedCoupon($subtotal);
+            $discount = $coupon ? (float) ($coupon['discount_amount'] ?? 0) : 0;
+            $shipping = $this->shippingFee; // PKR shipping
+            $totalAmount = max(0, $subtotal - $discount) + $shipping;
 
             // Create Order
             $order = Order::create([

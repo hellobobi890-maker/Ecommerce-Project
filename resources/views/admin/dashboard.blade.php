@@ -15,7 +15,7 @@
                         <span class="badge bg-success bg-opacity-10 text-success">+12% <i class="fas fa-arrow-up"></i></span>
                     </div>
                     <h6 class="text-muted text-uppercase fw-semibold fs-7 mb-1">Total Revenue</h6>
-                    <h3 class="fw-bold mb-0 text-dark">${{ number_format($totalRevenue, 2) }}</h3>
+                    <h3 class="fw-bold mb-0 text-dark">PKR {{ number_format($totalRevenue, 2) }}</h3>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
                                         <span>{{ $order->user->name }}</span>
                                     </div>
                                 </td>
-                                <td class="fw-bold">${{ number_format($order->total_amount, 2) }}</td>
+                                <td class="fw-bold">PKR {{ number_format($order->total_amount, 2) }}</td>
                                 <td>
                                     <span
                                         class="badge rounded-pill bg-{{ $order->status == 'delivered' ? 'success' : ($order->status == 'cancelled' ? 'danger' : 'warning') }} text-dark bg-opacity-25 text-opacity-100">

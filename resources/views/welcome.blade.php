@@ -359,7 +359,7 @@
 
                             <div class="image-container">
                                 <a href="{{ route('shop.show', $product->slug) }}">
-                                    <img src="{{ is_array($product->images) ? $product->images[0] : (is_string($product->images) ? $product->images : 'https://placehold.co/500x600?text=Product') }}"
+                                    <img src="{{ (is_array($product->images) && isset($product->images[0]) && $product->images[0]) ? $product->images[0] : ((is_string($product->images) && $product->images) ? $product->images : 'https://placehold.co/500x600?text=Product') }}"
                                         alt="{{ $product->name }}">
                                 </a>
                                 <div class="action-buttons">

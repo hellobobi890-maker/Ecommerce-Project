@@ -6,17 +6,56 @@ use Illuminate\Http\Request;
 
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Coupon;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
+    private int $shippingFee = 200;
+
+    private function cartSubtotal(array $cart): float
+    {
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += (float) ($item['price'] ?? 0) * (int) ($item['quantity'] ?? 1);
+        }
+        return (float) $subtotal;
+    }
+
+    private function refreshAppliedCoupon(float $subtotal): ?array
+    {
+        $couponSession = Session::get('applied_coupon');
+        if (!$couponSession || empty($couponSession['id'])) {
+            return null;
+        }
+
+        $couponModel = Coupon::find($couponSession['id']);
+        if (!$couponModel || !$couponModel->isValid($subtotal)) {
+            Session::forget('applied_coupon');
+            return null;
+        }
+
+        $discountAmount = $couponModel->calculateDiscount($subtotal);
+        $updated = [
+            'id' => $couponModel->id,
+            'code' => $couponModel->code,
+            'discount_type' => $couponModel->discount_type,
+            'discount_value' => $couponModel->discount_value,
+            'discount_amount' => $discountAmount,
+        ];
+
+        Session::put('applied_coupon', $updated);
+        return $updated;
+    }
+
     /**
      * Display the cart page.
      */
     public function index()
     {
         $cart = Session::get('cart', []);
-        $coupon = Session::get('applied_coupon');
+        $subtotal = $this->cartSubtotal($cart);
+        $coupon = $this->refreshAppliedCoupon($subtotal);
         return view('cart.index', compact('cart', 'coupon'));
     }
 
@@ -101,6 +140,9 @@ class CartController extends Controller
         }
 
         Session::put('cart', $cart);
+
+        // Recalculate coupon (discount depends on subtotal)
+        $this->refreshAppliedCoupon($this->cartSubtotal($cart));
         
         // Calculate total items
         $totalItems = 0;
@@ -162,13 +204,14 @@ class CartController extends Controller
         $subtotal = 0;
         $totalItems = 0;
         foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-            $totalItems += $item['quantity'];
+            $subtotal += (float) ($item['price'] ?? 0) * (int) ($item['quantity'] ?? 1);
+            $totalItems += (int) ($item['quantity'] ?? 0);
         }
 
         if ($request->wantsJson()) {
-            $coupon = Session::get('applied_coupon');
-            $discount = $coupon ? $coupon['discount_amount'] : 0;
+            $coupon = $this->refreshAppliedCoupon((float) $subtotal);
+            $discount = $coupon ? (float) ($coupon['discount_amount'] ?? 0) : 0;
+            $total = max(0, (float) $subtotal - (float) $discount) + (float) $this->shippingFee;
             
             return response()->json([
                 'success' => true,
@@ -176,7 +219,7 @@ class CartController extends Controller
                 'cart_count' => $totalItems,
                 'subtotal' => number_format($subtotal, 2),
                 'discount' => number_format($discount, 2),
-                'total' => number_format($subtotal - $discount, 2),
+                'total' => number_format($total, 2),
             ]);
         }
 
