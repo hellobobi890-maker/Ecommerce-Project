@@ -145,8 +145,18 @@
 
                             <div class="image-container">
                                 <a href="{{ route('shop.show', $product->slug) }}">
-                                    <img src="{{asset('public/' . $product->images[0])}}"
-                                        alt="{{ $product->name }}">
+                                    @php
+                                        $productCardImg =
+                                            (isset($product->images) && is_array($product->images) && count($product->images) > 0)
+                                                ? $product->images[0]
+                                                : null;
+                                        $productCardImgUrl = $productCardImg
+                                            ? (\Illuminate\Support\Str::startsWith($productCardImg, ['http://', 'https://', '//'])
+                                                ? $productCardImg
+                                                : asset(ltrim($productCardImg, '/')))
+                                            : 'https://placehold.co/500x600?text=Product';
+                                    @endphp
+                                    <img src="{{ $productCardImgUrl }}" alt="{{ $product->name }}">
                                 </a>
                                 <div class="action-buttons">
                                     <button class="action-btn" title="Add to Cart"
