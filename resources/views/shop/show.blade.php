@@ -771,12 +771,22 @@
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
+                .then(async (response) => {
+                    const data = await response.json().catch(() => null);
+                    if (!response.ok) {
+                        return {
+                            success: false,
+                            message: (data && (data.message || data.error)) ? (data.message || data.error) : 'Error adding product to cart'
+                        };
+                    }
+                    return data;
+                })
                 .then(data => {
-                    if (data.success) {
+                    if (data && data.success) {
                         showNotification('Product added to cart!', 'success');
                         const badge = document.getElementById('cart-badge');
                         if (badge) {
@@ -784,7 +794,7 @@
                             badge.innerText = currentCount + parseInt(formData.get('quantity'));
                         }
                     } else {
-                        showNotification(data.message || 'Error adding product to cart', 'error');
+                        showNotification((data && data.message) ? data.message : 'Error adding product to cart', 'error');
                     }
                 })
                 .catch(error => {

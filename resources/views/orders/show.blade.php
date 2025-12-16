@@ -10,13 +10,6 @@
         </ol>
     </nav>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
     <div class="row">
         <!-- Order Details -->
         <div class="col-lg-8">
@@ -53,6 +46,32 @@
                                 <strong>PKR {{ number_format($item->price * $item->quantity, 2) }}</strong>
                             </div>
                         </div>
+
+                        @if($order->status === 'delivered' && ($item->product_id ?? null) && !(isset($reviewedProductIds) && in_array($item->product_id, $reviewedProductIds)))
+                            <div class="mb-3 pb-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                <form action="{{ route('reviews.store') }}" method="POST" class="row g-2 align-items-end">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                    <div class="col-12 col-md-3">
+                                        <label class="form-label small text-muted">Rating</label>
+                                        <select name="rating" class="form-select form-select-sm" required>
+                                            <option value="5">5</option>
+                                            <option value="4">4</option>
+                                            <option value="3">3</option>
+                                            <option value="2">2</option>
+                                            <option value="1">1</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-7">
+                                        <label class="form-label small text-muted">Comment</label>
+                                        <input type="text" name="comment" class="form-control form-control-sm" placeholder="Optional">
+                                    </div>
+                                    <div class="col-12 col-md-2 d-grid">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Leave Review</button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -150,7 +169,10 @@
                     <h5 class="mb-0 fw-bold"><i class="bi bi-geo-alt me-2"></i>Shipping Address</h5>
                 </div>
                 <div class="card-body">
-                    <p class="mb-1"><strong>{{ auth()->user()->name }}</strong></p>
+                    <p class="mb-1"><strong>{{ $order->full_name ?? $order->user->name ?? auth()->user()->name }}</strong></p>
+                    @if(($order->email ?? null) || ($order->user->email ?? null))
+                        <p class="mb-1 text-muted">{{ $order->email ?? $order->user->email }}</p>
+                    @endif
                     <p class="mb-1 text-muted">{{ $order->shipping_address }}</p>
                     @if($order->phone)
                         <p class="mb-0 text-muted"><i class="bi bi-telephone me-2"></i>{{ $order->phone }}</p>
@@ -173,6 +195,14 @@
                 <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary w-100 mb-2">
                     <i class="bi bi-arrow-left me-2"></i>Back to Orders
                 </a>
+                @if($order->status === 'delivered')
+                    <form action="{{ route('orders.reorder', $order->order_number) }}" method="POST" class="mb-2">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-arrow-repeat me-2"></i>Re-order
+                        </button>
+                    </form>
+                @endif
                 <a href="{{ route('shop.index') }}" class="btn btn-primary w-100">
                     <i class="bi bi-bag me-2"></i>Continue Shopping
                 </a>

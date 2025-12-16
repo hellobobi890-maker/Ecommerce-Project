@@ -50,8 +50,8 @@
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0"><i
                                                     class="bi bi-person text-muted"></i></span>
-                                            <input type="text" class="form-control border-start-0 bg-light"
-                                                value="{{ auth()->user()->name }}" disabled>
+                                            <input type="text" name="full_name" class="form-control border-start-0"
+                                                value="{{ old('full_name', auth()->user()->name) }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -59,8 +59,8 @@
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0"><i
                                                     class="bi bi-envelope text-muted"></i></span>
-                                            <input type="email" class="form-control border-start-0 bg-light"
-                                                value="{{ auth()->user()->email }}" disabled>
+                                            <input type="email" name="email" class="form-control border-start-0"
+                                                value="{{ old('email', auth()->user()->email) }}">
                                         </div>
                                     </div>
                                 </div>

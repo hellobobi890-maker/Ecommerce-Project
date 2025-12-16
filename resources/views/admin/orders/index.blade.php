@@ -51,9 +51,9 @@
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-2 rounded-circle d-flex align-items-center justify-content-center"
                                             style="width: 32px; height: 32px; font-size: 0.8rem;">
-                                            {{ substr($order->user->name ?? 'G', 0, 1) }}
+                                            {{ substr(($order->full_name ?? $order->user->name) ?? 'G', 0, 1) }}
                                         </div>
-                                        <span>{{ $order->user->name ?? 'Guest User' }}</span>
+                                        <span>{{ $order->full_name ?? $order->user->name ?? 'Guest User' }}</span>
                                     </div>
                                 </td>
                                 <td class="text-muted">{{ $order->created_at->format('M d, Y') }}</td>

@@ -186,9 +186,12 @@
                                         <span class="review-count">({{ rand(5, 50) }})</span>
                                     </div>
                                     <div class="color-options">
-                                        <div class="color-option color-brown"></div>
-                                        <div class="color-option color-black"></div>
-                                        <div class="color-option color-blue"></div>
+                                        @if (isset($product->color_options) && is_array($product->color_options))
+                                            @foreach ($product->color_options as $color)
+                                                <div class="color-option" style="background-color: {{ $color }};"
+                                                    title="{{ $color }}"></div>
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -216,9 +219,11 @@
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-fill"></i>
                         </div>
-                        <p class="text-muted mb-4">"Amazing quality products! Delivery was super fast and the customer service was excellent. Will definitely shop again!"</p>
+                        <p class="text-muted mb-4">"Amazing quality products! Delivery was super fast and the customer
+                            service was excellent. Will definitely shop again!"</p>
                         <div class="d-flex align-items-center gap-3 mt-auto">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 600;">SA</div>
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                style="width: 50px; height: 50px; font-weight: 600;">SA</div>
                             <div>
                                 <h6 class="fw-bold mb-0">Sara Ahmed</h6>
                                 <small class="text-muted">Karachi</small>
@@ -235,9 +240,11 @@
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-half"></i>
                         </div>
-                        <p class="text-muted mb-4">"Best online shopping experience in Pakistan! The products are exactly as shown in pictures. Highly recommended!"</p>
+                        <p class="text-muted mb-4">"Best online shopping experience in Pakistan! The products are exactly
+                            as shown in pictures. Highly recommended!"</p>
                         <div class="d-flex align-items-center gap-3 mt-auto">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 600;">AK</div>
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                style="width: 50px; height: 50px; font-weight: 600;">AK</div>
                             <div>
                                 <h6 class="fw-bold mb-0">Ali Khan</h6>
                                 <small class="text-muted">Lahore</small>
@@ -254,9 +261,11 @@
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-fill"></i>
                         </div>
-                        <p class="text-muted mb-4">"Great prices and even better quality! I love the variety of products available. The new collection is stunning!"</p>
+                        <p class="text-muted mb-4">"Great prices and even better quality! I love the variety of products
+                            available. The new collection is stunning!"</p>
                         <div class="d-flex align-items-center gap-3 mt-auto">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 600;">FN</div>
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                style="width: 50px; height: 50px; font-weight: 600;">FN</div>
                             <div>
                                 <h6 class="fw-bold mb-0">Fatima Noor</h6>
                                 <small class="text-muted">Islamabad</small>
@@ -359,7 +368,7 @@
 
                             <div class="image-container">
                                 <a href="{{ route('shop.show', $product->slug) }}">
-                                    <img src="{{ (is_array($product->images) && isset($product->images[0]) && $product->images[0]) ? $product->images[0] : ((is_string($product->images) && $product->images) ? $product->images : 'https://placehold.co/500x600?text=Product') }}"
+                                    <img src="{{ is_array($product->images) && isset($product->images[0]) && $product->images[0] ? $product->images[0] : (is_string($product->images) && $product->images ? $product->images : 'https://placehold.co/500x600?text=Product') }}"
                                         alt="{{ $product->name }}">
                                 </a>
                                 <div class="action-buttons">
@@ -420,16 +429,16 @@
     </section>
 
     <!-- Newsletter Section -->
-    <div class="py-5 bg-dark text-white position-relative"
-        style="background: var(--gradient-hero);">
+    <div class="py-5 bg-dark text-white position-relative" style="background: var(--gradient-hero);">
         <div class="container text-center" style="max-width: 600px;">
             <i class="bi bi-envelope-open display-4 text-white mb-3"></i>
             <h2 class="fw-bold mb-3">Subscribe to our Newsletter</h2>
             <p class="text-white-50 mb-4">Get the latest updates on new products and upcoming sales.</p>
-            <form class="d-flex gap-2 justify-content-center" action="{{ route('newsletter.subscribe') }}" method="POST">
+            <form class="d-flex gap-2 justify-content-center" action="{{ route('newsletter.subscribe') }}"
+                method="POST">
                 @csrf
-                <input type="email" name="email" class="form-control rounded-pill px-4" placeholder="Your Email Address"
-                    style="max-width: 300px;">
+                <input type="email" name="email" class="form-control rounded-pill px-4"
+                    placeholder="Your Email Address" style="max-width: 300px;">
                 <button class="btn btn-light rounded-pill px-4 fw-bold" type="submit">Subscribe</button>
             </form>
         </div>
@@ -447,17 +456,22 @@
                     <div class="row g-0">
                         <div class="col-lg-6">
                             <div class="p-4 h-100 d-flex flex-column">
-                                <div class="main-image-container mb-3 flex-grow-1 bg-light rounded-3 overflow-hidden" style="height: 400px;">
-                                    <img id="qv-main-image" src="" alt="Product" class="w-100 h-100" style="object-fit: contain;">
+                                <div class="main-image-container mb-3 flex-grow-1 bg-light rounded-3 overflow-hidden"
+                                    style="height: 400px;">
+                                    <img id="qv-main-image" src="" alt="Product" class="w-100 h-100"
+                                        style="object-fit: contain;">
                                 </div>
                                 <div class="thumbnails-container d-flex align-items-center gap-2">
-                                    <button class="btn btn-outline-secondary btn-sm rounded-circle prev-thumb" style="width: 36px; height: 36px;">
+                                    <button class="btn btn-outline-secondary btn-sm rounded-circle prev-thumb"
+                                        style="width: 36px; height: 36px;">
                                         <i class="bi bi-chevron-left"></i>
                                     </button>
-                                    <div class="thumbnail-slider flex-grow-1 d-flex gap-2 overflow-auto" id="qv-thumbnails" style="scroll-behavior: smooth;">
+                                    <div class="thumbnail-slider flex-grow-1 d-flex gap-2 overflow-auto"
+                                        id="qv-thumbnails" style="scroll-behavior: smooth;">
                                         <!-- Thumbnails injected by JS -->
                                     </div>
-                                    <button class="btn btn-outline-secondary btn-sm rounded-circle next-thumb" style="width: 36px; height: 36px;">
+                                    <button class="btn btn-outline-secondary btn-sm rounded-circle next-thumb"
+                                        style="width: 36px; height: 36px;">
                                         <i class="bi bi-chevron-right"></i>
                                     </button>
                                 </div>
@@ -486,11 +500,13 @@
 
                                 <div id="qv-variant-sections" class="mb-4">
                                     <div id="qv-color-wrap" class="mb-3 d-none">
-                                        <label class="form-label fw-bold mb-2">Color: <span id="qv-selected-color-text"></span></label>
+                                        <label class="form-label fw-bold mb-2">Color: <span
+                                                id="qv-selected-color-text"></span></label>
                                         <div id="qv-colors" class="d-flex gap-2 flex-wrap"></div>
                                     </div>
                                     <div id="qv-size-wrap" class="mb-3 d-none">
-                                        <label class="form-label fw-bold mb-2">Size: <span id="qv-selected-size-text"></span></label>
+                                        <label class="form-label fw-bold mb-2">Size: <span
+                                                id="qv-selected-size-text"></span></label>
                                         <div id="qv-sizes" class="d-flex gap-2 flex-wrap"></div>
                                     </div>
                                 </div>
@@ -498,7 +514,8 @@
                                 <div class="d-flex flex-column gap-2 mb-4 text-muted small">
                                     <div><i class="bi bi-shield-check text-success me-2"></i> 1 Year Brand Warranty</div>
                                     <div><i class="bi bi-arrow-repeat text-danger me-2"></i> 30 Day Return Policy</div>
-                                    <div><i class="bi bi-cash-stack text-warning me-2"></i> Cash on Delivery available</div>
+                                    <div><i class="bi bi-cash-stack text-warning me-2"></i> Cash on Delivery available
+                                    </div>
                                 </div>
 
                                 <hr class="my-4">
@@ -525,7 +542,8 @@
                                             </button>
                                         </div>
                                         <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-secondary btn-lg" id="qv-wishlist-btn" title="Wishlist">
+                                            <button type="button" class="btn btn-outline-secondary btn-lg"
+                                                id="qv-wishlist-btn" title="Wishlist">
                                                 <i class="bi bi-heart"></i>
                                             </button>
                                         </div>
@@ -629,7 +647,7 @@
             event.preventDefault();
             const button = event.currentTarget;
             const icon = button.querySelector('i');
-            
+
             // Show loading state
             if (icon) icon.className = 'bi bi-hourglass-split';
 
@@ -649,7 +667,7 @@
                         // User not logged in - redirect to login
                         showNotification('Please login to add items to wishlist!', 'error');
                         setTimeout(() => {
-                            window.location.href = '{{ route("login") }}';
+                            window.location.href = '{{ route('login') }}';
                         }, 1500);
                         throw new Error('Unauthenticated');
                     }
@@ -791,9 +809,11 @@
 
             images.forEach((imgSrc, index) => {
                 const thumb = document.createElement('div');
-                thumb.className = `thumbnail-item border rounded overflow-hidden ${index === 0 ? 'border-primary border-2' : ''}`;
+                thumb.className =
+                    `thumbnail-item border rounded overflow-hidden ${index === 0 ? 'border-primary border-2' : ''}`;
                 thumb.style.cssText = 'min-width: 70px; width: 70px; height: 70px; cursor: pointer;';
-                thumb.innerHTML = `<img src="${imgSrc}" alt="thumb" class="w-100 h-100" style="object-fit: cover;">`;
+                thumb.innerHTML =
+                `<img src="${imgSrc}" alt="thumb" class="w-100 h-100" style="object-fit: cover;">`;
                 thumb.onclick = () => {
                     window.qvCurrentIndex = index;
                     mainImage.src = imgSrc;
@@ -816,14 +836,22 @@
                 if (!thumbs.length) return;
                 const nextIndex = (window.qvCurrentIndex - 1 + thumbs.length) % thumbs.length;
                 thumbs[nextIndex].click();
-                thumbs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                thumbs[nextIndex].scrollIntoView({
+                    behavior: 'smooth',
+                    inline: 'center',
+                    block: 'nearest'
+                });
             };
             if (nextBtn) nextBtn.onclick = () => {
                 const thumbs = document.querySelectorAll('#qv-thumbnails .thumbnail-item');
                 if (!thumbs.length) return;
                 const nextIndex = (window.qvCurrentIndex + 1) % thumbs.length;
                 thumbs[nextIndex].click();
-                thumbs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                thumbs[nextIndex].scrollIntoView({
+                    behavior: 'smooth',
+                    inline: 'center',
+                    block: 'nearest'
+                });
             };
 
             new bootstrap.Modal(qvModalEl).show();
@@ -840,9 +868,10 @@
                 });
             }
         }
-        
+
         // Auto-advance slider
         let qvSliderInterval = null;
+
         function startQvSlider(images) {
             // Auto-slide disabled: only arrow navigation allowed
             return;
@@ -855,7 +884,7 @@
                 }
             }, 3000);
         }
-        
+
         // Clear interval when modal is closed
         document.addEventListener('DOMContentLoaded', function() {
             const qvModal = document.getElementById('quickViewModal');
@@ -912,8 +941,10 @@
                             body: JSON.stringify({
                                 product_id: productId,
                                 quantity: parseInt(quantity),
-                                color: document.getElementById('qv-selected-color')?.value || undefined,
-                                size: document.getElementById('qv-selected-size')?.value || undefined,
+                                color: document.getElementById('qv-selected-color')?.value ||
+                                    undefined,
+                                size: document.getElementById('qv-selected-size')?.value ||
+                                    undefined,
                             })
                         })
                         .then(response => response.json().catch(() => ({})))

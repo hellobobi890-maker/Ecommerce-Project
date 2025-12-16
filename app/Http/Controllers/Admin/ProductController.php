@@ -52,8 +52,11 @@ class ProductController extends Controller
             'color_options' => 'nullable|array',
             'sizes' => 'nullable|array',
             'variant_stock' => 'nullable|array',
+            'use_variant_stock' => 'boolean',
             'is_active' => 'boolean',
         ]);
+
+        unset($validated['use_variant_stock']);
 
         // Checkboxes
         $validated['color_options'] = $request->input('color_options', []);
@@ -125,8 +128,11 @@ class ProductController extends Controller
             'color_options' => 'nullable|array',
             'sizes' => 'nullable|array',
             'variant_stock' => 'nullable|array',
+            'use_variant_stock' => 'boolean',
             'is_active' => 'boolean',
         ]);
+
+        unset($validated['use_variant_stock']);
 
         if ($request->has('name')) {
             $validated['slug'] = Str::slug($validated['name']);
@@ -182,6 +188,14 @@ class ProductController extends Controller
 
     private function syncVariants(Product $product, Request $request): void
     {
+        $useVariantStock = $request->boolean('use_variant_stock');
+        if (!$useVariantStock) {
+            if ($product->variants()->exists()) {
+                $product->variants()->delete();
+            }
+            return;
+        }
+
         $colors = $request->input('color_options', []);
         $sizes = $request->input('sizes', []);
 
@@ -224,6 +238,8 @@ class ProductController extends Controller
         }
 
         $product->variants()->whereNotIn('variant_key', $wantedKeys)->delete();
+
+        // Update product's main stock with total variant stock
         $product->update(['stock' => $totalStock]);
     }
 

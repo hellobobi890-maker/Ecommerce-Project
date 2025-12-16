@@ -112,6 +112,12 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="use_variant_stock" name="use_variant_stock"
+                                                value="1">
+                                            <label class="form-check-label" for="use_variant_stock">Use variant stock (per color / size)</label>
+                                        </div>
+
                                         <div class="mt-4">
                                             <label class="form-label fw-bold small d-block">Variant Stock (Per Color / Size)</label>
                                             <div class="bg-white rounded border p-3">
@@ -204,6 +210,11 @@
 
                     <script>
                         (function() {
+                            function isVariantStockEnabled() {
+                                const el = document.getElementById('use_variant_stock');
+                                return !!(el && el.checked);
+                            }
+
                             function normalizeKeyPart(value) {
                                 if (value === null || value === undefined) return '-';
                                 const v = String(value).trim().toLowerCase();
@@ -230,6 +241,8 @@
                                 const stockInput = document.getElementById('stock');
                                 if (!stockInput) return;
 
+                                if (!isVariantStockEnabled()) return;
+
                                 const inputs = document.querySelectorAll('#variant-stock-grid input[data-variant-key]');
                                 if (inputs.length === 0) return;
 
@@ -246,6 +259,11 @@
                                 const sizes = getCheckedValues('sizes[]');
                                 const grid = document.getElementById('variant-stock-grid');
                                 if (!grid) return;
+
+                                if (!isVariantStockEnabled()) {
+                                    grid.innerHTML = '<div class="text-muted small">Enable variant stock to manage stock per color/size.</div>';
+                                    return;
+                                }
 
                                 const previous = getExistingStockMap();
                                 const useColors = colors.length > 0 ? colors : [null];
@@ -290,6 +308,11 @@
                             document.querySelectorAll('input[name="color_options[]"], input[name="sizes[]"]').forEach((el) => {
                                 el.addEventListener('change', rebuildGrid);
                             });
+
+                            const useVariantEl = document.getElementById('use_variant_stock');
+                            if (useVariantEl) {
+                                useVariantEl.addEventListener('change', rebuildGrid);
+                            }
 
                             rebuildGrid();
                         })();

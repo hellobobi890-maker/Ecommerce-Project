@@ -13,13 +13,6 @@
         </a>
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
     <div class="row g-4">
         <!-- Left Column: Order Items -->
         <div class="col-lg-8">
@@ -95,11 +88,11 @@
                     <div class="mb-3 d-flex align-items-center">
                         <div class="avatar-circle bg-light text-primary me-3 rounded-circle d-flex align-items-center justify-content-center"
                             style="width: 48px; height: 48px; font-size: 1.2rem;">
-                            {{ substr($order->user->name ?? 'G', 0, 1) }}
+                            {{ substr(($order->full_name ?? $order->user->name) ?? 'G', 0, 1) }}
                         </div>
                         <div>
-                            <h6 class="mb-0 fw-bold text-dark">{{ $order->user->name ?? 'Guest User' }}</h6>
-                            <small class="text-muted">{{ $order->user->email ?? 'No email provided' }}</small>
+                            <h6 class="mb-0 fw-bold text-dark">{{ $order->full_name ?? $order->user->name ?? 'Guest User' }}</h6>
+                            <small class="text-muted">{{ $order->email ?? $order->user->email ?? 'No email provided' }}</small>
                         </div>
                     </div>
                     <hr class="border-light my-3">

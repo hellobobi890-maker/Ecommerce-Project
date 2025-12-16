@@ -93,9 +93,9 @@
                                     <div class="d-flex align-items-center">
                                         <div class="bg-light rounded-circle text-center d-flex justify-content-center align-items-center me-2"
                                             style="width: 30px; height: 30px;">
-                                            {{ substr($order->user->name, 0, 1) }}
+                                            {{ substr(($order->full_name ?? $order->user->name) ?? 'G', 0, 1) }}
                                         </div>
-                                        <span>{{ $order->user->name }}</span>
+                                        <span>{{ $order->full_name ?? $order->user->name ?? 'Guest User' }}</span>
                                     </div>
                                 </td>
                                 <td class="fw-bold">PKR {{ number_format($order->total_amount, 2) }}</td>

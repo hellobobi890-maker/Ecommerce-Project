@@ -37,8 +37,13 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
-        $order->update(['status' => $request->status]);
+        $updates = ['status' => $request->status];
+        if ($request->status === 'delivered' && $order->payment_method === 'cod') {
+            $updates['payment_status'] = 'paid';
+        }
 
-        return redirect()->route('admin.orders.show', $id)->with('success', 'Order status updated successfully!');
+        $order->update($updates);
+
+        return redirect()->route('admin.orders.index', $id)->with('success', 'Order status updated successfully!');
     }
 }

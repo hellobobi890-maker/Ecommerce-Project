@@ -79,6 +79,8 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'full_name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
             'address' => 'required|string',
             'city' => 'required|string',
             'postal_code' => 'required|string',
@@ -139,6 +141,8 @@ class CheckoutController extends Controller
             // Create Order
             $order = Order::create([
                 'user_id' => auth()->id(),
+                'full_name' => $request->input('full_name'),
+                'email' => $request->input('email'),
                 'order_number' => 'ORD-' . strtoupper(uniqid()),
                 'status' => 'pending',
                 'total_amount' => $totalAmount,
