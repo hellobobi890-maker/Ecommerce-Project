@@ -145,7 +145,7 @@
 
                             <div class="image-container">
                                 <a href="{{ route('shop.show', $product->slug) }}">
-                                    <img src="{{ $product->images[0] ?? 'https://placehold.co/500x600?text=Product' }}"
+                                    <img src="{{asset($product->images[0]) ?? 'https://placehold.co/500x600?text=Product' }}"
                                         alt="{{ $product->name }}">
                                 </a>
                                 <div class="action-buttons">
