@@ -78,6 +78,7 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="ps-4 py-3 text-uppercase text-muted fs-7 fw-bold">Order ID</th>
+                            <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Products</th>
                             <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Customer</th>
                             <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Total</th>
                             <th class="py-3 text-uppercase text-muted fs-7 fw-bold">Status</th>
@@ -89,6 +90,32 @@
                         @forelse($recentOrders as $order)
                             <tr>
                                 <td class="ps-4 fw-bold">#{{ $order->order_number }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @php
+                                            $thumbs = $order->items->take(3);
+                                            $extraCount = max(0, $order->items->count() - 3);
+                                        @endphp
+
+                                        @foreach ($thumbs as $item)
+                                            @php
+                                                $img = null;
+                                                if ($item->product && is_array($item->product->images) && count($item->product->images) > 0) {
+                                                    $img = $item->product->images[0];
+                                                }
+                                                $img = $img ?: 'https://placehold.co/40x40?text=Img';
+                                                $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://', '//'])
+                                                    ? $img
+                                                    : asset(ltrim($img, '/'));
+                                            @endphp
+                                            <img src="{{ $imgUrl }}" class="rounded-2 border me-1" style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;" alt="Product" data-bs-toggle="modal" data-bs-target="#orderProductImageModal" data-img="{{ $imgUrl }}">
+                                        @endforeach
+
+                                        @if ($extraCount > 0)
+                                            <span class="small text-muted ms-1">+{{ $extraCount }}</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="bg-light rounded-circle text-center d-flex justify-content-center align-items-center me-2"
@@ -115,7 +142,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">No recent orders found.</td>
+                                <td colspan="7" class="text-center py-5 text-muted">No recent orders found.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -123,4 +150,27 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="orderProductImageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title">Product Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <img id="orderProductImageModalImg" src="" alt="Product" class="w-100" style="max-height: 80vh; object-fit: contain; background: #fff;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('orderProductImageModal')?.addEventListener('show.bs.modal', function(event) {
+            const trigger = event.relatedTarget;
+            const imgSrc = trigger?.getAttribute('data-img');
+            const imgEl = document.getElementById('orderProductImageModalImg');
+            if (imgEl) imgEl.src = imgSrc || '';
+        });
+    </script>
 @endsection

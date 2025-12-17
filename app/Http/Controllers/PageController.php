@@ -25,4 +25,19 @@ class PageController extends Controller
     {
         return view('pages.return-policy');
     }
+
+    public function shipping()
+    {
+        return view('pages.shipping');
+    }
+
+    public function terms()
+    {
+        return view('pages.terms');
+    }
+
+    public function faq()
+    {
+        return view('pages.faq');
+    }
 }

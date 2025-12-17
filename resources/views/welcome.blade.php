@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
     <!-- Hero Slider -->
     <div id="heroCarousel" class="carousel slide mb-5">
         <div class="carousel-indicators">
@@ -147,11 +149,17 @@
                                 <a href="{{ route('shop.show', $product->slug) }}">
                                     @php
                                         $productCardImg =
-                                            (isset($product->images) && is_array($product->images) && count($product->images) > 0)
+                                            isset($product->images) &&
+                                            is_array($product->images) &&
+                                            count($product->images) > 0
                                                 ? $product->images[0]
                                                 : null;
                                         $productCardImgUrl = $productCardImg
-                                            ? (\Illuminate\Support\Str::startsWith($productCardImg, ['http://', 'https://', '//'])
+                                            ? (\Illuminate\Support\Str::startsWith($productCardImg, [
+                                                'http://',
+                                                'https://',
+                                                '//',
+                                            ])
                                                 ? $productCardImg
                                                 : asset(ltrim($productCardImg, '/')))
                                             : 'https://placehold.co/500x600?text=Product';
@@ -219,73 +227,162 @@
                 <span class="text-primary fw-bold text-uppercase small">Customer Reviews</span>
                 <h2 class="fw-bold mt-2">What Our Customers Say</h2>
             </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
-                        <div class="text-warning mb-3">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
+            <div class="position-relative">
+                <div class="swiper testimonialsSwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide h-auto">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                <div class="text-warning mb-3">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="text-muted mb-4">"Amazing quality products! Delivery was super fast and the
+                                    customer
+                                    service was excellent. Will definitely shop again!"</p>
+                                <div class="d-flex align-items-center gap-3 mt-auto">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sara Ahmed"
+                                        class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Sara Ahmed</h6>
+                                        <small class="text-muted">Karachi</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-muted mb-4">"Amazing quality products! Delivery was super fast and the customer
-                            service was excellent. Will definitely shop again!"</p>
-                        <div class="d-flex align-items-center gap-3 mt-auto">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                style="width: 50px; height: 50px; font-weight: 600;">SA</div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Sara Ahmed</h6>
-                                <small class="text-muted">Karachi</small>
+                        <div class="swiper-slide h-auto">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                <div class="text-warning mb-3">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                </div>
+                                <p class="text-muted mb-4">"Best online shopping experience in Pakistan! The products are
+                                    exactly
+                                    as shown in pictures. Highly recommended!"</p>
+                                <div class="d-flex align-items-center gap-3 mt-auto">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Ali Khan"
+                                        class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Ali Khan</h6>
+                                        <small class="text-muted">Lahore</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide h-auto">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                <div class="text-warning mb-3">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="text-muted mb-4">"Great prices and even better quality! I love the variety of
+                                    products
+                                    available. The new collection is stunning!"</p>
+                                <div class="d-flex align-items-center gap-3 mt-auto">
+                                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Fatima Noor"
+                                        class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Fatima Noor</h6>
+                                        <small class="text-muted">Islamabad</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide h-auto">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                <div class="text-warning mb-3">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="text-muted mb-4">"Fabrics ki quality bohat achi hai. Packing bhi secure thi aur
+                                    delivery time pe mili. Highly recommended!"</p>
+                                <div class="d-flex align-items-center gap-3 mt-auto">
+                                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Hassan Malik"
+                                        class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Hassan Malik</h6>
+                                        <small class="text-muted">Faisalabad</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide h-auto">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                <div class="text-warning mb-3">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                </div>
+                                <p class="text-muted mb-4">"Very satisfied with my order. Customer support was very helpful
+                                    and responsive. Will shop again!"</p>
+                                <div class="d-flex align-items-center gap-3 mt-auto">
+                                    <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Ayesha Siddiqui"
+                                        class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Ayesha Siddiqui</h6>
+                                        <small class="text-muted">Multan</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="swiper-pagination mt-4 position-static"></div>
                 </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
-                        <div class="text-warning mb-3">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-half"></i>
-                        </div>
-                        <p class="text-muted mb-4">"Best online shopping experience in Pakistan! The products are exactly
-                            as shown in pictures. Highly recommended!"</p>
-                        <div class="d-flex align-items-center gap-3 mt-auto">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                style="width: 50px; height: 50px; font-weight: 600;">AK</div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Ali Khan</h6>
-                                <small class="text-muted">Lahore</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
-                        <div class="text-warning mb-3">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                        </div>
-                        <p class="text-muted mb-4">"Great prices and even better quality! I love the variety of products
-                            available. The new collection is stunning!"</p>
-                        <div class="d-flex align-items-center gap-3 mt-auto">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                style="width: 50px; height: 50px; font-weight: 600;">FN</div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Fatima Noor</h6>
-                                <small class="text-muted">Islamabad</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Navigation Arrows -->
+                <button class="testimonial-nav-btn testimonial-prev d-none d-lg-flex" type="button">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="testimonial-nav-btn testimonial-next d-none d-lg-flex" type="button">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
+    <style>
+        .testimonial-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-nav-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .testimonial-prev {
+            left: -25px;
+        }
+
+        .testimonial-next {
+            right: -25px;
+        }
+    </style>
 
     <!-- New Section: Trending -->
     <div class="py-5 bg-light">
@@ -455,7 +552,9 @@
     </div>
 @endsection
 
-@section('scripts_home')
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <!-- Quick View Modal -->
     <div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -575,6 +674,39 @@
     </div>
 
     <script>
+        window.__HOME_SWIPER__ = true;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Swiper && document.querySelector('.testimonialsSwiper')) {
+                new Swiper('.testimonialsSwiper', {
+                    loop: true,
+                    spaceBetween: 24,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true
+                    },
+                    navigation: {
+                        nextEl: '.testimonial-next',
+                        prevEl: '.testimonial-prev'
+                    },
+                    pagination: {
+                        el: '.testimonialsSwiper .swiper-pagination',
+                        clickable: true
+                    },
+                    slidesPerView: 1,
+                    breakpoints: {
+                        768: {
+                            slidesPerView: 2
+                        },
+                        992: {
+                            slidesPerView: 3
+                        }
+                    }
+                });
+            }
+        });
+
         function addToCart(event, productId) {
             event.preventDefault();
             const button = event.currentTarget;
@@ -607,10 +739,10 @@
                 requestAnimationFrame(() => {
                     flyer.style.top = (cartRect.top + cartRect.height / 2) + 'px';
                     flyer.style.left = (cartRect.left + cartRect.width / 2) + 'px';
-                    flyer.style.width = '10px';
-                    flyer.style.height = '10px';
-                    flyer.style.opacity = '0.5';
                 });
+                flyer.style.width = '10px';
+                flyer.style.height = '10px';
+                flyer.style.opacity = '0.5';
 
                 setTimeout(() => {
                     flyer.remove();
@@ -823,7 +955,7 @@
                     `thumbnail-item border rounded overflow-hidden ${index === 0 ? 'border-primary border-2' : ''}`;
                 thumb.style.cssText = 'min-width: 70px; width: 70px; height: 70px; cursor: pointer;';
                 thumb.innerHTML =
-                `<img src="${imgSrc}" alt="thumb" class="w-100 h-100" style="object-fit: cover;">`;
+                    `<img src="${imgSrc}" alt="thumb" class="w-100 h-100" style="object-fit: cover;">`;
                 thumb.onclick = () => {
                     window.qvCurrentIndex = index;
                     mainImage.src = imgSrc;

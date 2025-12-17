@@ -48,6 +48,9 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/contact-us', 'contact')->name('pages.contact');
     Route::get('/privacy-policy', 'privacy')->name('pages.privacy');
     Route::get('/return-policy', 'returnPolicy')->name('pages.return-policy');
+    Route::get('/shipping-policy', 'shipping')->name('pages.shipping');
+    Route::get('/terms-and-conditions', 'terms')->name('pages.terms');
+    Route::get('/faq', 'faq')->name('pages.faq');
 });
 
 // Authenticated User Routes
@@ -92,7 +95,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update']);
     Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+
+    // Settings
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__ . '/auth.php';
-

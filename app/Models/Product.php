@@ -30,7 +30,6 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'images' => 'array',
         'color_options' => 'array',
         'sizes' => 'array',
         'is_featured' => 'boolean',
@@ -39,6 +38,30 @@ class Product extends Model
         'price' => 'decimal:2',
         'sale_price' => 'decimal:2',
     ];
+
+    /**
+     * Get images with proper asset URLs
+     */
+    public function getImagesAttribute($value): array
+    {
+        $images = is_string($value) ? json_decode($value, true) : $value;
+
+        if (!is_array($images) || empty($images)) {
+            return [];
+        }
+
+        return array_map(function ($img) {
+            if (empty($img)) {
+                return $img;
+            }
+            // Already a full URL
+            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://') || str_starts_with($img, '//')) {
+                return $img;
+            }
+            // Convert /storage/ paths to proper asset URLs
+            return asset(ltrim($img, '/'));
+        }, $images);
+    }
 
     public function category(): BelongsTo
     {

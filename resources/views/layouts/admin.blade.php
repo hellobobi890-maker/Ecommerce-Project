@@ -164,6 +164,12 @@
                     <i class="fas fa-ticket-alt"></i> Coupons
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.settings.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
             <li class="nav-item mt-auto">
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf

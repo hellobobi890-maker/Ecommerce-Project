@@ -771,8 +771,11 @@
                     <ul class="list-unstyled d-flex flex-column gap-2">
                         <li><a href="{{ route('pages.contact') }}" class="footer-link">Contact Us</a></li>
                         <li><a href="{{ route('pages.about') }}" class="footer-link">About Us</a></li>
+                        <li><a href="{{ route('pages.faq') }}" class="footer-link">FAQ</a></li>
                         <li><a href="{{ route('pages.privacy') }}" class="footer-link">Privacy Policy</a></li>
-                        <li><a href="{{ route('pages.return-policy') }}" class="footer-link">Returns</a></li>
+                        <li><a href="{{ route('pages.return-policy') }}" class="footer-link">Return Policy</a></li>
+                        <li><a href="{{ route('pages.shipping') }}" class="footer-link">Shipping Policy</a></li>
+                        <li><a href="{{ route('pages.terms') }}" class="footer-link">Terms & Conditions</a></li>
                     </ul>
                 </div>
 

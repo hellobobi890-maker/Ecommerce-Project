@@ -240,39 +240,46 @@
                             @endif
 
                             <!-- Quantity & Add to Cart -->
-                            <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
-                                <div class="d-flex align-items-center border rounded-3 overflow-hidden bg-light"
-                                    style="height: 50px;">
-                                    <button type="button" class="btn btn-link text-dark px-3 py-2 border-0"
-                                        onclick="decrementQty()">
-                                        <i class="bi bi-dash-lg"></i>
-                                    </button>
-                                    <input type="number" name="quantity" id="product-qty" value="1"
-                                        min="1" max="{{ max(1, (int) $product->stock) }}"
-                                        class="form-control border-0 text-center bg-transparent fw-bold"
-                                        style="width: 60px;">
-                                    <button type="button" class="btn btn-link text-dark px-3 py-2 border-0"
-                                        onclick="incrementQty()">
-                                        <i class="bi bi-plus-lg"></i>
+                            <div class="product-actions mb-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <!-- Quantity Selector -->
+                                    <div class="quantity-selector d-flex align-items-center border rounded-pill overflow-hidden bg-light"
+                                        style="height: 52px;">
+                                        <button type="button" class="btn btn-link text-dark px-3 h-100 border-0"
+                                            onclick="decrementQty()">
+                                            <i class="bi bi-dash-lg"></i>
+                                        </button>
+                                        <input type="number" name="quantity" id="product-qty" value="1"
+                                            min="1" max="{{ max(1, (int) $product->stock) }}"
+                                            class="form-control border-0 text-center bg-transparent fw-bold"
+                                            style="width: 50px; font-size: 1.1rem;">
+                                        <button type="button" class="btn btn-link text-dark px-3 h-100 border-0"
+                                            onclick="incrementQty()">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Wishlist Button -->
+                                    <button type="button"
+                                        class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center"
+                                        onclick="addWishlist({{ $product->id }})" style="width: 52px; height: 52px;">
+                                        <i class="bi bi-heart fs-5"></i>
                                     </button>
                                 </div>
 
-                                <button type="submit" class="btn btn-dark btn-lg px-5 py-3 flex-grow-1"
-                                    id="add-to-cart-btn" style="border-radius: 10px;">
-                                    <i class="bi bi-bag me-2"></i>Add To Cart
-                                </button>
-
-                                <a href="{{ route('checkout.index') }}" class="btn btn-warning btn-lg px-4 py-3"
-                                    style="border-radius: 10px;">
-                                    Checkout Now
-                                </a>
+                                <!-- Main Action Buttons -->
+                                <div class="d-flex gap-3">
+                                    <button type="submit"
+                                        class="btn btn-dark btn-lg flex-grow-1 py-3 rounded-pill fw-semibold"
+                                        id="add-to-cart-btn">
+                                        <i class="bi bi-bag me-2"></i>Add To Cart
+                                    </button>
+                                    <a href="{{ route('checkout.index') }}"
+                                        class="btn btn-warning btn-lg px-4 py-3 rounded-pill fw-semibold">
+                                        <i class="bi bi-credit-card me-2"></i>Checkout Now
+                                    </a>
+                                </div>
                             </div>
-
-                            <!-- Wishlist -->
-                            <button type="button" class="btn btn-outline-secondary w-100 py-3 mb-4"
-                                onclick="addWishlist({{ $product->id }})" style="border-radius: 10px;">
-                                <i class="bi bi-heart me-2"></i>Add to Wishlist
-                            </button>
 
                             <!-- Features -->
                             <div class="border-top pt-4">
@@ -780,7 +787,8 @@
                     if (!response.ok) {
                         return {
                             success: false,
-                            message: (data && (data.message || data.error)) ? (data.message || data.error) : 'Error adding product to cart'
+                            message: (data && (data.message || data.error)) ? (data.message || data.error) :
+                                'Error adding product to cart'
                         };
                     }
                     return data;
@@ -794,7 +802,8 @@
                             badge.innerText = currentCount + parseInt(formData.get('quantity'));
                         }
                     } else {
-                        showNotification((data && data.message) ? data.message : 'Error adding product to cart', 'error');
+                        showNotification((data && data.message) ? data.message : 'Error adding product to cart',
+                            'error');
                     }
                 })
                 .catch(error => {

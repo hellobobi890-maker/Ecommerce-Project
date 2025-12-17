@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Coupon;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-    private int $shippingFee = 200;
+    private function getShippingFee(): int
+    {
+        return Setting::getShippingFee();
+    }
 
     private function cartSubtotal(array $cart): float
     {
@@ -128,8 +132,8 @@ class CartController extends Controller
                 "name" => $product->name,
                 "quantity" => $quantity,
                 "price" => $product->sale_price ?? $product->price,
-                "image" => is_array($product->images) && count($product->images) > 0 
-                    ? $product->images[0] 
+                "image" => is_array($product->images) && count($product->images) > 0
+                    ? $product->images[0]
                     : 'https://placehold.co/100x100?text=Product',
                 "product_id" => $product->id,
                 "product_variant_id" => $variantId,
@@ -143,7 +147,7 @@ class CartController extends Controller
 
         // Recalculate coupon (discount depends on subtotal)
         $this->refreshAppliedCoupon($this->cartSubtotal($cart));
-        
+
         // Calculate total items
         $totalItems = 0;
         foreach ($cart as $item) {
@@ -167,10 +171,10 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         $cart = Session::get('cart', []);
-        
+
         if (isset($cart[$id])) {
             $newQty = (int) $request->quantity;
-            
+
             if ($newQty <= 0) {
                 unset($cart[$id]);
             } else {
@@ -193,10 +197,10 @@ class CartController extends Controller
                     }
                     return redirect()->back()->with('error', "Sirf {$availableStock} items available hain!");
                 }
-                
+
                 $cart[$id]['quantity'] = $newQty;
             }
-            
+
             Session::put('cart', $cart);
         }
 
@@ -211,8 +215,8 @@ class CartController extends Controller
         if ($request->wantsJson()) {
             $coupon = $this->refreshAppliedCoupon((float) $subtotal);
             $discount = $coupon ? (float) ($coupon['discount_amount'] ?? 0) : 0;
-            $total = max(0, (float) $subtotal - (float) $discount) + (float) $this->shippingFee;
-            
+            $total = max(0, (float) $subtotal - (float) $discount) + (float) $this->getShippingFee();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Cart update ho gaya!',
@@ -236,7 +240,7 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             unset($cart[$id]);
             Session::put('cart', $cart);
-            
+
             // If cart is empty, remove coupon too
             if (count($cart) === 0) {
                 Session::forget('applied_coupon');
@@ -253,8 +257,7 @@ class CartController extends Controller
     {
         Session::forget('cart');
         Session::forget('applied_coupon');
-        
+
         return redirect()->back()->with('success', 'Cart clear ho gaya!');
     }
 }
-

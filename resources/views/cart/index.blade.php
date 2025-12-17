@@ -157,7 +157,7 @@
                             <div class="p-4">
                                 @php
                                     $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-                                    $shipping = 200;
+                                    $shipping = \App\Models\Setting::getShippingFee();
                                     $discount = isset($coupon) ? $coupon['discount_amount'] : 0;
                                     $total = $subtotal - $discount + $shipping;
                                 @endphp

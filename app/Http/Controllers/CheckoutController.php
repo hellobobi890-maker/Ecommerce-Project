@@ -11,10 +11,14 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Coupon;
+use App\Models\Setting;
 
 class CheckoutController extends Controller
 {
-    private int $shippingFee = 200;
+    private function getShippingFee(): int
+    {
+        return Setting::getShippingFee();
+    }
 
     private function cartSubtotal(array $cart): float
     {
@@ -67,7 +71,7 @@ class CheckoutController extends Controller
         $subtotal = $this->cartSubtotal($cart);
         $coupon = $this->refreshAppliedCoupon($subtotal);
         $discount = $coupon ? (float) ($coupon['discount_amount'] ?? 0) : 0;
-        $shipping = $this->shippingFee; // PKR shipping
+        $shipping = $this->getShippingFee(); // Dynamic shipping from settings
         $total = max(0, $subtotal - $discount) + $shipping;
 
         return view('checkout.index', compact('cart', 'coupon', 'subtotal', 'discount', 'shipping', 'total'));
@@ -135,7 +139,7 @@ class CheckoutController extends Controller
             $subtotal = $this->cartSubtotal($cart);
             $coupon = $this->refreshAppliedCoupon($subtotal);
             $discount = $coupon ? (float) ($coupon['discount_amount'] ?? 0) : 0;
-            $shipping = $this->shippingFee; // PKR shipping
+            $shipping = $this->getShippingFee(); // Dynamic shipping from settings
             $totalAmount = max(0, $subtotal - $discount) + $shipping;
 
             // Create Order
@@ -170,7 +174,7 @@ class CheckoutController extends Controller
                     $variant = $product->getVariantBySelection($details['color'] ?? null, $details['size'] ?? null);
                     $variantId = $variant?->id;
                 }
-                
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $details['product_id'],
@@ -200,18 +204,16 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
-            
+
             // Clear cart and coupon
             Session::forget('cart');
             Session::forget('applied_coupon');
 
             return redirect()->route('orders.show', $order->order_number)
                 ->with('success', 'Order place ho gaya! Order ID: ' . $order->order_number);
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Order place karte waqt error aa gaya. Dobara try karein.');
         }
     }
 }
-

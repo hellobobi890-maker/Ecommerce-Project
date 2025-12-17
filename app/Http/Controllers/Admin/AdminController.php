@@ -18,7 +18,7 @@ class AdminController extends Controller
         $totalCustomers = User::where('role', 'customer')->count();
         $totalRevenue = Order::sum('total_amount'); // Calculating total revenue from all orders
 
-        $recentOrders = Order::with('user')->latest()->take(5)->get();
+        $recentOrders = Order::with(['user', 'items.product'])->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('totalOrders', 'totalProducts', 'totalCustomers', 'totalRevenue', 'recentOrders'));
     }
