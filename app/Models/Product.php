@@ -30,6 +30,7 @@ class Product extends Model
     ];
 
     protected $casts = [
+        'images' => 'array',
         'color_options' => 'array',
         'sizes' => 'array',
         'is_featured' => 'boolean',
