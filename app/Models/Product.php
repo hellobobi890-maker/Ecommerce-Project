@@ -41,6 +41,7 @@ class Product extends Model
 
     /**
      * Get images with proper asset URLs
+     * Adds /public prefix for servers where document root is not the public folder
      */
     public function getImagesAttribute($value): array
     {
@@ -58,7 +59,11 @@ class Product extends Model
             if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://') || str_starts_with($img, '//')) {
                 return $img;
             }
-            // Convert /storage/ paths to proper asset URLs
+            // Convert /storage/ paths - add /public prefix for live server
+            if (str_starts_with($img, '/storage/') || str_starts_with($img, 'storage/')) {
+                $path = ltrim($img, '/');
+                return url('/public/' . $path);
+            }
             return asset(ltrim($img, '/'));
         }, $images);
     }
