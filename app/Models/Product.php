@@ -42,7 +42,7 @@ class Product extends Model
 
     /**
      * Get images with proper asset URLs
-     * Adds /public prefix for servers where document root is not the public folder
+     * Uses ASSET_PREFIX env variable: empty for localhost, '/public' for shared hosting
      */
     public function getImagesAttribute($value): array
     {
@@ -52,7 +52,10 @@ class Product extends Model
             return [];
         }
 
-        return array_map(function ($img) {
+        // Get prefix from env - empty for localhost, '/public' for live
+        $prefix = rtrim(env('ASSET_PREFIX', ''), '/');
+
+        return array_map(function ($img) use ($prefix) {
             if (empty($img)) {
                 return $img;
             }
@@ -60,12 +63,18 @@ class Product extends Model
             if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://') || str_starts_with($img, '//')) {
                 return $img;
             }
-            // Convert /storage/ paths - add /public prefix for live server
-            if (str_starts_with($img, '/storage/') || str_starts_with($img, 'storage/')) {
-                $path = ltrim($img, '/');
-                return asset($path);
+            // Already has /public prefix
+            if (str_starts_with($img, '/public/')) {
+                return $img;
             }
-            return asset(ltrim($img, '/'));
+            // For /storage/ paths, add prefix
+            if (str_starts_with($img, '/storage/') || str_starts_with($img, 'storage/')) {
+                $path = '/' . ltrim($img, '/');
+                return $prefix . $path;
+            }
+            // For other relative paths
+            $path = '/' . ltrim($img, '/');
+            return $prefix . $path;
         }, $images);
     }
 

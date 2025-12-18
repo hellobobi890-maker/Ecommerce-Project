@@ -1155,7 +1155,11 @@
             const productIdEl = document.getElementById('qv-product-id');
             if (titleEl) titleEl.innerText = product?.name || '';
             if (priceEl) priceEl.innerText = 'PKR ' + parseFloat(product?.price || 0).toFixed(2);
-            if (descEl) descEl.innerText = product?.description || '';
+            // Handle description with line breaks
+            if (descEl) {
+                const desc = product?.description || '';
+                descEl.innerHTML = desc.replace(/\n/g, '<br>');
+            }
             if (productIdEl) productIdEl.value = product?.id || '';
 
             const wishlistBtn = document.getElementById('qv-wishlist-btn');

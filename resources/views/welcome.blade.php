@@ -852,7 +852,12 @@
 
             document.getElementById('qv-title').innerText = product.name;
             document.getElementById('qv-price').innerText = 'PKR ' + parseFloat(product.price).toFixed(2);
-            document.getElementById('qv-description').innerText = product.description || '';
+            // Handle description with line breaks
+            const descEl = document.getElementById('qv-description');
+            if (descEl) {
+                const desc = product.description || '';
+                descEl.innerHTML = desc.replace(/\n/g, '<br>');
+            }
             document.getElementById('qv-product-id').value = product.id;
 
             const wishlistBtn = document.getElementById('qv-wishlist-btn');

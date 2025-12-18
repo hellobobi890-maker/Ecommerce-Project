@@ -273,7 +273,19 @@
             const itemId = input.dataset.itemId;
 
             let val = parseInt(input.value) + delta;
-            if (val < 1) val = 1;
+            
+            // If quantity becomes 0 or less, remove the item
+            if (val <= 0) {
+                if (confirm('Remove this item from cart?')) {
+                    // Submit the remove form
+                    const removeForm = cartItem.querySelector('form[action*="cart/"]');
+                    if (removeForm) {
+                        removeForm.submit();
+                    }
+                }
+                return;
+            }
+            
             input.value = val;
 
             // Disable buttons during request
