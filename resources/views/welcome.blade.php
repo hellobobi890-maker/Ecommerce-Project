@@ -707,9 +707,16 @@
             }
         });
 
-        function addToCart(event, productId) {
-            event.preventDefault();
-            const button = event.currentTarget;
+        window.addToCart = window.addToCart || function(event, product) {
+            if (event && typeof event.preventDefault === 'function') event.preventDefault();
+            const button = event && event.currentTarget ? event.currentTarget : null;
+            if (button) {
+                if (button.dataset.adding === '1') return;
+                button.dataset.adding = '1';
+                button.disabled = true;
+            }
+
+            const productId = (product && typeof product === 'object') ? product.id : product;
 
             // --- Fly Animation Start ---
             const cartIcon = document.getElementById('cart-icon-container');
@@ -750,8 +757,9 @@
             }
 
             // AJAX Request
-            fetch('{{ route('cart.store') }}', {
+            fetch('{{ route('cart.store', [], false) }}', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -762,11 +770,15 @@
                         quantity: 1
                     })
                 })
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
+                .then(async (response) => {
+                    const data = await response.json().catch(() => ({}));
+                    return { ok: response.ok, data };
                 })
-                .then(data => {
+                .then(({ ok, data }) => {
+                    if (!ok || (data && data.success === false)) {
+                        showNotification((data && data.message) ? data.message : 'Unable to add to cart.', 'error');
+                        return;
+                    }
                     const badge = document.getElementById('cart-badge');
                     if (badge) {
                         if (data.cart_count !== undefined) {
@@ -775,20 +787,24 @@
                             badge.innerText = parseInt(badge.innerText) + 1;
                         }
                     }
-                    showNotification('Product added to cart!', 'success');
+                    showNotification((data && data.message) ? data.message : 'Product added to cart!', 'success');
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    const badge = document.getElementById('cart-badge');
-                    if (badge) badge.innerText = parseInt(badge.innerText) + 1;
-                    showNotification('Product added to cart!', 'success');
+                    showNotification('Unable to add to cart.', 'error');
+                })
+                .finally(() => {
+                    if (button) {
+                        button.disabled = false;
+                        button.dataset.adding = '0';
+                    }
                 });
         }
 
-        function addToWishlist(event, productId) {
-            event.preventDefault();
-            const button = event.currentTarget;
-            const icon = button.querySelector('i');
+        window.addToWishlist = window.addToWishlist || function(event, productId) {
+            if (event && typeof event.preventDefault === 'function') event.preventDefault();
+            const button = event && event.currentTarget ? event.currentTarget : null;
+            const icon = button ? button.querySelector('i') : null;
 
             // Show loading state
             if (icon) icon.className = 'bi bi-hourglass-split';
@@ -828,7 +844,7 @@
                 });
         }
 
-        function openQuickView(product) {
+        window.openQuickView = window.openQuickView || function(product) {
             if (qvSliderInterval) {
                 clearInterval(qvSliderInterval);
                 qvSliderInterval = null;
@@ -891,8 +907,12 @@
                 productColors.forEach((c, idx) => {
                     const b = document.createElement('button');
                     b.type = 'button';
-                    b.className = 'btn btn-outline-secondary rounded-pill px-3 py-1 border-2';
-                    b.innerText = c;
+                    b.className = 'btn p-0 rounded-circle border border-2';
+                    b.style.width = '22px';
+                    b.style.height = '22px';
+                    b.style.background = c;
+                    b.style.boxShadow = 'inset 0 0 0 1px rgba(0,0,0,0.08)';
+                    b.title = c;
                     b.onclick = () => selectQvColor(c, b);
                     colorsEl.appendChild(b);
                     if (idx === 0) selectQvColor(c, b);
@@ -1041,6 +1061,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+            if (window.__GLOBAL_QV__) return;
             const qvForm = document.getElementById('qv-add-to-cart-form');
             if (qvForm) {
                 qvForm.addEventListener('submit', function(e) {
@@ -1072,8 +1093,9 @@
                         setTimeout(() => flyer.remove(), 800);
                     }
 
-                    fetch('{{ route('cart.store') }}', {
+                    fetch('{{ route('cart.store', [], false) }}', {
                             method: 'POST',
+                            credentials: 'same-origin',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json',
@@ -1089,14 +1111,21 @@
                                     undefined,
                             })
                         })
-                        .then(response => response.json().catch(() => ({})))
-                        .then(data => {
+                        .then(async (response) => {
+                            const data = await response.json().catch(() => ({}));
+                            return { ok: response.ok, data };
+                        })
+                        .then(({ ok, data }) => {
+                            if (!ok || (data && data.success === false)) {
+                                showNotification((data && data.message) ? data.message : 'Unable to add to cart.', 'error');
+                                return;
+                            }
                             const badge = document.getElementById('cart-badge');
                             if (badge) {
                                 badge.innerText = data.cart_count !== undefined ? data.cart_count :
                                     parseInt(badge.innerText) + parseInt(quantity);
                             }
-                            showNotification('Product added to cart!', 'success');
+                            showNotification((data && data.message) ? data.message : 'Product added to cart!', 'success');
                             setTimeout(() => {
                                 bootstrap.Modal.getInstance(document.getElementById(
                                     'quickViewModal')).hide();
@@ -1104,22 +1133,20 @@
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            const badge = document.getElementById('cart-badge');
-                            if (badge) badge.innerText = parseInt(badge.innerText) + parseInt(quantity);
-                            showNotification('Product added to cart!', 'success');
+                            showNotification('Unable to add to cart.', 'error');
                         });
                 });
             }
         });
 
-        function incrementQv() {
+        window.incrementQv = window.incrementQv || function() {
             const el = document.getElementById('qv-quantity');
             el.value = parseInt(el.value) + 1;
-        }
+        };
 
-        function decrementQv() {
+        window.decrementQv = window.decrementQv || function() {
             const el = document.getElementById('qv-quantity');
             if (parseInt(el.value) > 1) el.value = parseInt(el.value) - 1;
-        }
+        };
     </script>
 @endsection

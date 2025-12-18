@@ -63,7 +63,7 @@ class Product extends Model
             // Convert /storage/ paths - add /public prefix for live server
             if (str_starts_with($img, '/storage/') || str_starts_with($img, 'storage/')) {
                 $path = ltrim($img, '/');
-                return url('/public/' . $path);
+                return asset($path);
             }
             return asset(ltrim($img, '/'));
         }, $images);

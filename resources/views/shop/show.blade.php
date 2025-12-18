@@ -774,8 +774,9 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding...';
 
-            fetch('{{ route('cart.store') }}', {
+            fetch('{{ route('cart.store', [], false) }}', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     body: formData,
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -798,8 +799,12 @@
                         showNotification('Product added to cart!', 'success');
                         const badge = document.getElementById('cart-badge');
                         if (badge) {
-                            const currentCount = parseInt(badge.innerText) || 0;
-                            badge.innerText = currentCount + parseInt(formData.get('quantity'));
+                            if (data.cart_count !== undefined) {
+                                badge.innerText = data.cart_count;
+                            } else {
+                                const currentCount = parseInt(badge.innerText) || 0;
+                                badge.innerText = currentCount + parseInt(formData.get('quantity'));
+                            }
                         }
                     } else {
                         showNotification((data && data.message) ? data.message : 'Error adding product to cart',

@@ -1046,14 +1046,21 @@
 
         window.addToCart = window.addToCart || function(event, product) {
             if (event && typeof event.preventDefault === 'function') event.preventDefault();
+            const btn = event && event.currentTarget ? event.currentTarget : null;
+            if (btn) {
+                if (btn.dataset.adding === '1') return;
+                btn.dataset.adding = '1';
+                btn.disabled = true;
+            }
             const productId = (product && typeof product === 'object') ? product.id : product;
             const defaultColor = (product && Array.isArray(product.color_options) && product.color_options.length) ?
                 product.color_options[0] : undefined;
             const defaultSize = (product && Array.isArray(product.sizes) && product.sizes.length) ? product.sizes[0] :
                 undefined;
 
-            fetch('{{ route('cart.store') }}', {
+            fetch('{{ route('cart.store', [], false) }}', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -1066,10 +1073,13 @@
                         size: defaultSize
                     })
                 })
-                .then(r => r.json().catch(() => ({})))
-                .then(data => {
-                    if (data && data.success === false) {
-                        showNotification(data.message || 'Unable to add to cart.', 'error');
+                .then(async (response) => {
+                    const data = await response.json().catch(() => ({}));
+                    return { ok: response.ok, data };
+                })
+                .then(({ ok, data }) => {
+                    if (!ok || (data && data.success === false)) {
+                        showNotification((data && data.message) ? data.message : 'Unable to add to cart.', 'error');
                         return;
                     }
                     const badge = document.getElementById('cart-badge');
@@ -1077,7 +1087,13 @@
                         .innerText || '0', 10) + 1);
                     showNotification(data.message || 'Product added to cart!', 'success');
                 })
-                .catch(() => showNotification('Unable to add to cart.', 'error'));
+                .catch(() => showNotification('Unable to add to cart.', 'error'))
+                .finally(() => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.dataset.adding = '0';
+                    }
+                });
         };
 
         window.addToWishlist = window.addToWishlist || function(event, productId) {
@@ -1363,8 +1379,16 @@
                 const color = document.getElementById('qv-selected-color')?.value || undefined;
                 const size = document.getElementById('qv-selected-size')?.value || undefined;
 
-                fetch('{{ route('cart.store') }}', {
+                const submitBtn = qvForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    if (submitBtn.dataset.adding === '1') return;
+                    submitBtn.dataset.adding = '1';
+                    submitBtn.disabled = true;
+                }
+
+                fetch('{{ route('cart.store', [], false) }}', {
                         method: 'POST',
+                        credentials: 'same-origin',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
@@ -1378,10 +1402,13 @@
                             size: size
                         })
                     })
-                    .then(r => r.json().catch(() => ({})))
-                    .then(data => {
-                        if (data && data.success === false) {
-                            showNotification(data.message || 'Unable to add to cart.', 'error');
+                    .then(async (response) => {
+                        const data = await response.json().catch(() => ({}));
+                        return { ok: response.ok, data };
+                    })
+                    .then(({ ok, data }) => {
+                        if (!ok || (data && data.success === false)) {
+                            showNotification((data && data.message) ? data.message : 'Unable to add to cart.', 'error');
                             return;
                         }
                         const badge = document.getElementById('cart-badge');
@@ -1395,7 +1422,13 @@
                             'quickViewModal'));
                         if (instance) instance.hide();
                     })
-                    .catch(() => showNotification('Unable to add to cart.', 'error'));
+                    .catch(() => showNotification('Unable to add to cart.', 'error'))
+                    .finally(() => {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.dataset.adding = '0';
+                        }
+                    });
             });
         });
     </script>

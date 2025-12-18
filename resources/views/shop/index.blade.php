@@ -462,8 +462,9 @@ function addToCartLocal(event, product) {
     const defaultColor = (product && Array.isArray(product.color_options) && product.color_options.length) ? product.color_options[0] : undefined;
     const defaultSize = (product && Array.isArray(product.sizes) && product.sizes.length) ? product.sizes[0] : undefined;
 
-    fetch('{{ route('cart.store') }}', {
+    fetch('{{ route('cart.store', [], false) }}', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -471,11 +472,14 @@ function addToCartLocal(event, product) {
         },
         body: JSON.stringify({ product_id: productId, quantity: 1, color: defaultColor, size: defaultSize })
     })
-    .then(r => r.json().catch(() => ({})))
-    .then(data => {
+    .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        return { ok: response.ok, data };
+    })
+    .then(({ ok, data }) => {
         const badge = document.getElementById('cart-badge');
-        if (data && data.success === false) {
-            showNotification(data.message || 'Unable to add to cart.', 'error');
+        if (!ok || (data && data.success === false)) {
+            showNotification((data && data.message) ? data.message : 'Unable to add to cart.', 'error');
             return;
         }
         if (badge) badge.innerText = data.cart_count ?? parseInt(badge.innerText) + 1;
@@ -744,8 +748,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => flyer.remove(), 800);
             }
 
-            fetch('{{ route('cart.store') }}', {
+            fetch('{{ route('cart.store', [], false) }}', {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -758,10 +763,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     size: size
                 })
             })
-            .then(r => r.json().catch(() => ({})))
-            .then(data => {
-                if (data && data.success === false) {
-                    showNotification(data.message || 'Unable to add to cart.', 'error');
+            .then(async (response) => {
+                const data = await response.json().catch(() => ({}));
+                return { ok: response.ok, data };
+            })
+            .then(({ ok, data }) => {
+                if (!ok || (data && data.success === false)) {
+                    showNotification((data && data.message) ? data.message : 'Unable to add to cart.', 'error');
                     return;
                 }
 
