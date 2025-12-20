@@ -29,12 +29,12 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Admin users go to admin dashboard
-        if ($request->user()->role === 'admin') {
+        if ($request->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 
-        // Regular users go back to where they came from, default to home
-        return redirect()->intended(url()->previous() ?: route('home'));
+        // Regular users ALWAYS go to home page, never to admin
+        return redirect()->route('home');
     }
 
     /**
